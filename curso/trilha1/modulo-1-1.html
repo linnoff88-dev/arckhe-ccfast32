@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 1.1 — Configuração Inicial | 32 Hacks do Claude Code</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FACC15',
+            dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+
+    /* Light mode overrides - OBRIGATORIO */
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    /* Light mode - cores de acento (trilha emerald) */
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+    html:not(.dark) .bg-emerald-500\/10 { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+    html:not(.dark) .hover\:bg-emerald-500\/30:hover { background-color: rgba(5, 150, 105, 0.18); }
+
+    /* Light mode - remove gradientes (fundo uniforme) */
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+
+    /* Light mode - cores especiais */
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+
+    /* Light mode - nav */
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAVIGATION -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">⚡</span>
+            <span class="font-bold text-lg hidden sm:inline">32 Hacks do Claude Code</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-emerald-400 bg-emerald-500/10">
+            <span class="sm:hidden">T1</span><span class="hidden sm:inline">Iniciante</span>
+          </a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+            <span class="sm:hidden">T2</span><span class="hidden sm:inline">Intermediário</span>
+          </a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors">
+            <span class="sm:hidden">T3</span><span class="hidden sm:inline">Avançado</span>
+          </a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-emerald-400 transition-colors">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-emerald-400 transition-colors">Trilha 1</a>
+      <span>/</span>
+      <span class="text-emerald-400">Módulo 1.1</span>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-emerald-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded-full mb-4">
+        MÓDULO 1.1
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">⚙️ Configuração Inicial</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">Três comandos que transformam como você inicia e monitora qualquer projeto com o Claude Code. Uma vez configurado, você nunca mais vai querer trabalhar sem eles.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">3</div>
+          <div class="text-xs text-neutral-400">Hacks</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">45</div>
+          <div class="text-xs text-neutral-400">Minutos</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">Base</div>
+          <div class="text-xs text-neutral-400">Nível</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">Setup</div>
+          <div class="text-xs text-neutral-400">Tipo</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTEUDO -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- HACK 1: /init -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">1</span>
+        <h2 class="text-2xl font-bold">⚙️ Hack 1 — /init</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        O primeiro comando que você deve executar em qualquer projeto é o <strong class="text-emerald-400">/init</strong>. Ele escaneia toda a estrutura do projeto e gera automaticamente um arquivo <strong class="text-emerald-400">CLAUDE.md</strong> na raiz — uma memória persistente que o Claude consulta no início de cada sessão, eliminando a necessidade de reexplicar o projeto toda vez.
+      </p>
+
+      <!-- Conceito principal -->
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-4 flex items-center"><span class="mr-2">💡</span> Como funciona o /init</h3>
+        <p class="text-neutral-300 mb-4">Ao executar <code class="bg-dark-900 px-2 py-0.5 rounded text-emerald-400 text-sm">/init</code>, o Claude percorre toda a estrutura do projeto e gera um arquivo CLAUDE.md contendo:</p>
+        <ul class="space-y-2 text-neutral-300">
+          <li class="flex items-start space-x-2"><span class="text-emerald-400 mt-1">•</span><span>Visão geral da arquitetura e dos diretórios principais</span></li>
+          <li class="flex items-start space-x-2"><span class="text-emerald-400 mt-1">•</span><span>Tecnologias e frameworks identificados automaticamente</span></li>
+          <li class="flex items-start space-x-2"><span class="text-emerald-400 mt-1">•</span><span>Arquivos de configuração importantes (package.json, tsconfig, etc.)</span></li>
+          <li class="flex items-start space-x-2"><span class="text-emerald-400 mt-1">•</span><span>Convenções de código e padrões encontrados no projeto</span></li>
+          <li class="flex items-start space-x-2"><span class="text-emerald-400 mt-1">•</span><span>Comandos de build, test e deploy disponíveis</span></li>
+        </ul>
+      </div>
+
+      <!-- Exemplo de terminal -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4 flex items-center"><span class="mr-2">💻</span> Exemplo Prático</h3>
+        <div class="bg-dark-900 rounded-lg p-4 font-mono text-sm">
+          <p class="text-neutral-500"># Abra o terminal na raiz do projeto</p>
+          <p class="text-emerald-400 mt-2">$ /init</p>
+          <p class="text-neutral-400 mt-1">Escaneando estrutura do projeto...</p>
+          <p class="text-neutral-400">Analisando dependências em package.json...</p>
+          <p class="text-neutral-400">Identificando padrões de código...</p>
+          <p class="text-emerald-400 mt-2">✓ CLAUDE.md criado com sucesso (247 linhas)</p>
+          <p class="text-neutral-500 mt-2"># O CLAUDE.md agora documenta todo o projeto</p>
+          <p class="text-neutral-500"># Sessões futuras começam com contexto completo</p>
+        </div>
+      </div>
+
+      <!-- Dica prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">⚡</span> Dica Prática</h3>
+        <p class="text-neutral-300">Após gerar o CLAUDE.md, edite-o manualmente para adicionar regras específicas do projeto: convenções de nomenclatura, decisões arquiteturais importantes, endpoints de API e qualquer contexto que o Claude precisaria saber. O /init cria a base — você refina.</p>
+      </div>
+
+      <!-- Fazer vs Não fazer -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ O que FAZER</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Execute /init em todo projeto novo antes de começar a trabalhar</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Edite o CLAUDE.md gerado para adicionar regras específicas</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Mantenha o CLAUDE.md versionado no git junto com o código</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Atualize o CLAUDE.md quando houver mudanças arquiteturais importantes</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ O que NÃO fazer</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Ignorar o CLAUDE.md gerado e não editar nada nele</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Reexplicar o projeto manualmente toda sessão sem usar /init</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Adicionar o CLAUDE.md ao .gitignore — deve ser versionado</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Esperar problemas aparecerem antes de configurar o projeto</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Exemplo de CLAUDE.md -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+        <h3 class="text-lg font-semibold mb-4 flex items-center"><span class="mr-2">📄</span> Exemplo de CLAUDE.md gerado</h3>
+        <div class="bg-dark-900 rounded-lg p-4 font-mono text-sm">
+          <p class="text-emerald-400"># Projeto: meu-app-saas</p>
+          <p class="text-neutral-500 mt-2">## Stack</p>
+          <p class="text-neutral-300">- Next.js 14 (App Router)</p>
+          <p class="text-neutral-300">- TypeScript + Tailwind CSS</p>
+          <p class="text-neutral-300">- Prisma + PostgreSQL</p>
+          <p class="text-neutral-300">- Auth: NextAuth.js</p>
+          <p class="text-neutral-500 mt-2">## Estrutura</p>
+          <p class="text-neutral-300">- /app: rotas e pages</p>
+          <p class="text-neutral-300">- /components: componentes reutilizáveis</p>
+          <p class="text-neutral-300">- /lib: utilitários e helpers</p>
+          <p class="text-neutral-500 mt-2">## Comandos</p>
+          <p class="text-neutral-300">- npm run dev: desenvolvimento</p>
+          <p class="text-neutral-300">- npm run build: build de produção</p>
+          <p class="text-neutral-300">- npx prisma migrate dev: migrar DB</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- HACK 2: Statusline -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">2</span>
+        <h2 class="text-2xl font-bold">📊 Hack 2 — Statusline</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        O <strong class="text-emerald-400">statusline</strong> é um mini painel que fica na parte inferior do terminal, exibindo informações críticas da sessão em tempo real. Você configura o que quer ver, o Claude gera o script — e você nunca mais opera no escuro sobre quanto contexto resta na sessão.
+      </p>
+
+      <!-- Conceito principal -->
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-4 flex items-center"><span class="mr-2">💡</span> O que o Statusline monitora</h3>
+        <p class="text-neutral-300 mb-4">Ao chamar <code class="bg-dark-900 px-2 py-0.5 rounded text-emerald-400 text-sm">/statusline</code>, diga ao Claude o que deseja monitorar:</p>
+        <ul class="space-y-2 text-neutral-300">
+          <li class="flex items-start space-x-2"><span class="text-emerald-400 mt-1">•</span><span><strong class="text-white">Modelo ativo:</strong> claude-opus-4, sonnet, haiku — para saber qual modelo está em uso</span></li>
+          <li class="flex items-start space-x-2"><span class="text-emerald-400 mt-1">•</span><span><strong class="text-white">Porcentagem de contexto:</strong> 0% a 100% — o indicador mais crítico para evitar degradação</span></li>
+          <li class="flex items-start space-x-2"><span class="text-emerald-400 mt-1">•</span><span><strong class="text-white">Custo da sessão:</strong> Valor em USD acumulado — para controle de gastos</span></li>
+          <li class="flex items-start space-x-2"><span class="text-emerald-400 mt-1">•</span><span><strong class="text-white">Tokens usados:</strong> Número exato de tokens consumidos na sessão</span></li>
+          <li class="flex items-start space-x-2"><span class="text-emerald-400 mt-1">•</span><span><strong class="text-white">Tempo de sessão:</strong> Duração desde o início da conversa atual</span></li>
+        </ul>
+      </div>
+
+      <!-- Dados/Pesquisa -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">📈</span> Por que o contexto importa</h3>
+        <ul class="space-y-3 text-neutral-300">
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span><strong>0–50%:</strong> Desempenho ótimo — o Claude tem todo o espaço para raciocinar</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span><strong>50–70%:</strong> Zona de atenção — considere compactar em breve</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span><strong>70–85%:</strong> Degradação visível — respostas começam a perder coerência e detalhes</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span><strong>85–100%:</strong> Zona crítica — erros, alucinações e perda de contexto anterior frequentes</span></li>
+        </ul>
+      </div>
+
+      <!-- Exemplo de terminal -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4 flex items-center"><span class="mr-2">💻</span> Configurando o Statusline</h3>
+        <div class="bg-dark-900 rounded-lg p-4 font-mono text-sm">
+          <p class="text-neutral-500"># Execute e especifique o que quer ver</p>
+          <p class="text-emerald-400 mt-2">$ /statusline</p>
+          <p class="text-neutral-400 mt-1">Quero ver: modelo, % de contexto e custo</p>
+          <p class="text-neutral-500 mt-3"># Claude gera o script e ativa</p>
+          <p class="text-emerald-400 mt-1">✓ Statusline configurado</p>
+          <p class="text-neutral-500 mt-3"># Aparece na parte inferior do terminal:</p>
+          <p class="text-emerald-400 mt-1">[ claude-sonnet-4 | Contexto: 23% | Custo: $0.042 ]</p>
+        </div>
+      </div>
+
+      <!-- Dica prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">⚡</span> Dica Prática</h3>
+        <p class="text-neutral-300">Configure o statusline para mostrar a porcentagem de contexto como prioridade. Quando chegar a 60%, execute <code class="bg-dark-700 px-1 rounded text-sm">/compact</code> imediatamente — antes de perder qualidade. O statusline torna esse monitoramento passivo e automático.</p>
+      </div>
+
+      <!-- Fazer vs Não fazer -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ O que FAZER</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Configure sempre que iniciar uma sessão longa</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Inclua % de contexto como métrica obrigatória</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Use o custo para controlar gastos em projetos de equipe</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ O que NÃO fazer</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Operar sem monitorar o contexto — você não sabe quando vai degradar</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Ignorar o indicador quando passa de 70% — age imediatamente</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Esperar erros aparecerem para perceber que o contexto estourou</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- HACK 3: Voz -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">3</span>
+        <h2 class="text-2xl font-bold">🎤 Hack 3 — Entrada por Voz</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Digitar prompts complexos é lento. A entrada por voz permite articular contexto rico, descrever problemas e dar instruções longas em fração do tempo — sem sacrificar nenhuma informação. O Claude Code tem suporte nativo via <strong class="text-emerald-400">/voice</strong> e qualquer app de ditado do sistema operacional funciona perfeitamente no terminal.
+      </p>
+
+      <!-- Conceito principal -->
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-4 flex items-center"><span class="mr-2">💡</span> Opções de entrada por voz</h3>
+        <p class="text-neutral-300 mb-4">Três maneiras de usar voz com o Claude Code:</p>
+        <ul class="space-y-3 text-neutral-300">
+          <li class="flex items-start space-x-2">
+            <span class="text-emerald-400 mt-1 font-bold">1.</span>
+            <div><strong class="text-white">/voice nativo:</strong> Comando embutido no Claude Code. Execute <code class="bg-dark-900 px-1 rounded text-sm">/voice</code> e comece a falar diretamente no terminal.</div>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-emerald-400 mt-1 font-bold">2.</span>
+            <div><strong class="text-white">Ditado do macOS:</strong> Fn+Fn (dois taps) ativa o ditado nativo em qualquer campo de texto, incluindo o terminal.</div>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-emerald-400 mt-1 font-bold">3.</span>
+            <div><strong class="text-white">Apps de terceiros:</strong> Whisper Flow, Superwhisper, ou qualquer app de ditado por voz funciona com o terminal.</div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Timeline de quando usar -->
+      <div class="space-y-4 mb-6">
+        <h3 class="text-lg font-semibold flex items-center"><span class="mr-2">🎯</span> Quando usar voz vs teclado</h3>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center">
+            <span class="text-emerald-400 font-bold">✓</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <h4 class="font-semibold text-emerald-400 mb-2">Use voz para:</h4>
+            <p class="text-sm text-neutral-400 mb-2">Contexto e descrições longas</p>
+            <p class="text-neutral-300 text-sm">Explicar o problema, descrever o contexto do negócio, dar instruções complexas em múltiplas etapas, articular o que você quer que o Claude entenda sobre a situação.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-dark-700 flex items-center justify-center">
+            <span class="text-neutral-400 font-bold">⌨</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <h4 class="font-semibold text-neutral-300 mb-2">Use teclado para:</h4>
+            <p class="text-sm text-neutral-400 mb-2">Comandos precisos e código</p>
+            <p class="text-neutral-300 text-sm">Comandos curtos como /init ou /compact, trechos de código que precisam ser exatos, nomes de variáveis e paths de arquivo específicos.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dica prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">⚡</span> Dica Prática</h3>
+        <p class="text-neutral-300">Combine voz com o CLAUDE.md. Como o CLAUDE.md já contém o contexto do projeto, você não precisa redigitar nada sobre a arquitetura — use a voz para dar instruções ricas sobre a tarefa específica do momento. Os dois juntos eliminam praticamente toda a fricção de comunicação.</p>
+      </div>
+
+      <!-- Fazer vs Não fazer -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ O que FAZER</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Use voz para prompts de contexto rico e descrições de problema</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Teste o /voice nativo antes de instalar apps de terceiros</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Fale naturalmente — o Claude entende linguagem coloquial</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ O que NÃO fazer</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Ditar nomes de variáveis ou paths de arquivo — typos são difíceis de detectar</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Usar voz em ambiente barulhento sem checar o texto antes de enviar</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Ignorar essa funcionalidade por hábito — o ganho de velocidade é real</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESUMO DO MODULO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-emerald-900/40 via-dark-800 to-dark-800 rounded-xl border border-emerald-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center">
+          <span class="mr-3">🎯</span> Resumo do Módulo 1.1
+        </h2>
+
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Hack 1 — /init:</strong>
+              <span class="text-neutral-400"> Execute em todo projeto para gerar o CLAUDE.md e eliminar reexplicações desnecessárias a cada sessão</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Hack 2 — Statusline:</strong>
+              <span class="text-neutral-400"> Configure o painel de monitoramento para ter visibilidade contínua do contexto, modelo e custo da sessão</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Hack 3 — Voz:</strong>
+              <span class="text-neutral-400"> Use entrada por voz para prompts ricos e descritivos — digitar menos significa produzir mais</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-emerald-400 mb-2">Próximo Módulo:</h3>
+          <p class="text-neutral-300">1.2 — Gerenciar Contexto: aprenda a diagnosticar, compactar e reiniciar o contexto no momento certo para manter a qualidade máxima nas sessões longas.</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">
+            ← Voltar para Trilha 1
+          </a>
+          <a href="modulo-1-2.html" class="flex-1 text-center px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-500 transition-colors">
+            Próximo: Gerenciar Contexto →
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-dark-600 py-8 mt-4">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>32 Hacks do Claude Code · <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> · 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) {
+      themeToggleDarkIcon.classList.remove('hidden');
+      html.classList.remove('dark');
+    } else {
+      themeToggleLightIcon.classList.remove('hidden');
+    }
+    themeToggle.addEventListener('click', () => {
+      themeToggleDarkIcon.classList.toggle('hidden');
+      themeToggleLightIcon.classList.toggle('hidden');
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>

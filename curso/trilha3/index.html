@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trilha 3 - Avançado | 32 Hacks do Claude Code</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FACC15',
+            dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+
+    /* Light mode overrides - OBRIGATORIO */
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    /* Light mode - cores de acento (trilha purple) */
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .bg-purple-500\/20 { background-color: rgba(124, 58, 237, 0.12); }
+    html:not(.dark) .bg-purple-500\/10 { background-color: rgba(124, 58, 237, 0.08); }
+    html:not(.dark) .border-purple-500\/30 { border-color: rgba(124, 58, 237, 0.25); }
+    html:not(.dark) .hover\:bg-purple-500\/30:hover { background-color: rgba(124, 58, 237, 0.18); }
+
+    /* Light mode - remove gradientes (fundo uniforme) */
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+
+    /* Light mode - cores especiais */
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+
+    /* Light mode - nav */
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAVIGATION -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">⚡</span>
+            <span class="font-bold text-lg hidden sm:inline">32 Hacks do Claude Code</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+            <span class="sm:hidden">T1</span><span class="hidden sm:inline">Iniciante</span>
+          </a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+            <span class="sm:hidden">T2</span><span class="hidden sm:inline">Intermediário</span>
+          </a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-purple-400 bg-purple-500/10">
+            <span class="sm:hidden">T3</span><span class="hidden sm:inline">Avançado</span>
+          </a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-purple-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-semibold rounded-full mb-4">
+        TRILHA 3
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🔥 Avançado — Poder Total do Claude Code</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">
+        Domine paralelismo real com worktrees e equipes de agentes, automatize com loops e infraestrutura remota, ative o modo de raciocínio máximo e integre dados e documentação atualizada. Os 10 hacks finais que separam usuários avançados de todos os outros.
+      </p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-purple-400">4</div>
+          <div class="text-xs text-neutral-400">Módulos</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-purple-400">10</div>
+          <div class="text-xs text-neutral-400">Hacks</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-purple-400">~4h</div>
+          <div class="text-xs text-neutral-400">Duração</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-purple-400">Pro</div>
+          <div class="text-xs text-neutral-400">Nível</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- NAVEGACAO RAPIDA -->
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h2 class="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-4">Módulos desta Trilha</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+      <a href="modulo-3-1.html" class="bg-dark-800 rounded-xl border border-dark-600 p-5 hover:border-purple-500/30 hover:bg-dark-700/50 transition-all group">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-purple-400 font-bold text-sm">3.1</span>
+          <span class="text-xs text-neutral-500">~60 min</span>
+        </div>
+        <h3 class="font-semibold group-hover:text-purple-400 transition-colors">🔀 Paralelismo Real</h3>
+        <p class="text-neutral-500 text-sm mt-1">Hacks 23, 31</p>
+      </a>
+      <a href="modulo-3-2.html" class="bg-dark-800 rounded-xl border border-dark-600 p-5 hover:border-purple-500/30 hover:bg-dark-700/50 transition-all group">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-purple-400 font-bold text-sm">3.2</span>
+          <span class="text-xs text-neutral-500">~60 min</span>
+        </div>
+        <h3 class="font-semibold group-hover:text-purple-400 transition-colors">🏗️ Automação e Infra</h3>
+        <p class="text-neutral-500 text-sm mt-1">Hacks 25, 26, 27</p>
+      </a>
+      <a href="modulo-3-3.html" class="bg-dark-800 rounded-xl border border-dark-600 p-5 hover:border-purple-500/30 hover:bg-dark-700/50 transition-all group">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-purple-400 font-bold text-sm">3.3</span>
+          <span class="text-xs text-neutral-500">~50 min</span>
+        </div>
+        <h3 class="font-semibold group-hover:text-purple-400 transition-colors">💪 Poder Máximo</h3>
+        <p class="text-neutral-500 text-sm mt-1">Hacks 29, 30</p>
+      </a>
+      <a href="modulo-3-4.html" class="bg-dark-800 rounded-xl border border-dark-600 p-5 hover:border-purple-500/30 hover:bg-dark-700/50 transition-all group">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-purple-400 font-bold text-sm">3.4</span>
+          <span class="text-xs text-neutral-500">~60 min</span>
+        </div>
+        <h3 class="font-semibold group-hover:text-purple-400 transition-colors">📊 Dados e Integrações</h3>
+        <p class="text-neutral-500 text-sm mt-1">Hacks 24, 28, 32</p>
+      </a>
+    </div>
+
+    <div class="flex items-center space-x-4 mb-8">
+      <div class="h-px flex-1 bg-dark-600"></div>
+      <span class="text-sm text-neutral-500 font-medium">Conteúdo Detalhado</span>
+      <div class="h-px flex-1 bg-dark-600"></div>
+    </div>
+
+    <!-- MODULO 3.1 -->
+    <div class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-purple-400 font-bold">3.1</span>
+          <span class="text-xs text-neutral-500">~60 min</span>
+        </div>
+        <h3 class="text-2xl font-bold mb-2">🔀 Paralelismo Real</h3>
+        <p class="text-neutral-400 text-sm">Trabalhe com múltiplos agentes simultâneos sem conflitos. Git Worktrees criam workspaces isolados para paralelismo seguro; Equipes de Agentes vão além com comunicação direta entre membros.</p>
+      </div>
+
+      <div class="divide-y divide-dark-600">
+        <!-- Hack 23 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">23</span>
+            <span class="text-lg">🌿</span>
+            <div>
+              <span class="font-medium">Hack 23 — Git Worktrees</span>
+              <span class="text-neutral-500 text-sm ml-2">- Paralelismo seguro com cópias isoladas</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-purple-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">Git Worktrees cria cópias paralelas e eficientes do projeto, cada uma em sua própria branch. O comando <code class="bg-dark-600 px-1 rounded">claude-worktree &lt;nome-da-feature&gt;</code> cria um workspace isolado onde um agente Claude pode trabalhar sem interferir nos outros.</p>
+              </div>
+              <div>
+                <span class="text-purple-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Duas sessões do Claude na mesma pasta podem sobrescrever uma à outra — isso gera conflitos silenciosos e trabalho perdido. Worktrees resolvem esse problema estruturalmente, permitindo rodar três, quatro ou cinco agentes ao mesmo tempo com total segurança.</p>
+              </div>
+              <div>
+                <span class="text-purple-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Cada worktree é uma branch isolada; use nomes descritivos por feature; abra terminais separados para cada agente; ao final, mescle as branches normalmente. Multiplicador direto de velocidade de desenvolvimento.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hack 31 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">31</span>
+            <span class="text-lg">🤝</span>
+            <div>
+              <span class="font-medium">Hack 31 — Equipes de Agentes</span>
+              <span class="text-neutral-500 text-sm ml-2">- Agentes que se comunicam entre si</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-purple-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">Diferente de subagentes (paralelos mas isolados), equipes de agentes compartilham uma lista de tarefas e se comunicam diretamente uns com os outros. Você pode falar com agentes individuais da equipe, e eles podem atribuir trabalho entre si.</p>
+              </div>
+              <div>
+                <span class="text-purple-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Subagentes não conseguem se coordenar — cada um trabalha isolado. Para projetos grandes onde as partes precisam ser coesas, equipes de agentes produzem saída muito mais integrada. Mais custoso e lento, mas a qualidade de saída é superior para projetos complexos.</p>
+              </div>
+              <div>
+                <span class="text-purple-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Lista de tarefas compartilhada; comunicação direta entre membros; atribuição de trabalho entre agentes; acesso direto a agentes individuais; reserve para projetos grandes onde coesão é crítica.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-3-1')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors">Ver em Modal</button>
+        <a href="modulo-3-1.html" class="px-4 py-2 text-sm bg-purple-600 hover:bg-purple-500 text-white rounded-lg transition-colors">Ver Completo</a>
+      </div>
+    </div>
+
+    <!-- MODULO 3.2 -->
+    <div class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-purple-400 font-bold">3.2</span>
+          <span class="text-xs text-neutral-500">~60 min</span>
+        </div>
+        <h3 class="text-2xl font-bold mb-2">🏗️ Automação e Infraestrutura</h3>
+        <p class="text-neutral-400 text-sm">Automatize tarefas recorrentes com /loop, mantenha sessões sempre ativas em VPS remoto e controle seu Claude de qualquer lugar pelo celular — sem que o código saia da sua máquina.</p>
+      </div>
+
+      <div class="divide-y divide-dark-600">
+        <!-- Hack 25 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">25</span>
+            <span class="text-lg">🔁</span>
+            <div>
+              <span class="font-medium">Hack 25 — /loop</span>
+              <span class="text-neutral-500 text-sm ml-2">- Monitoramento automático e recorrente</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-purple-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">O Claude reexecuta um prompt automaticamente em intervalos definidos dentro da mesma sessão. Você instrui: "A cada 5 minutos, verifique o deployment" — e o Claude monitora até algo precisar da sua atenção. Lembretes únicos também funcionam.</p>
+              </div>
+              <div>
+                <span class="text-purple-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Elimina a necessidade de ficar verificando manualmente PRs, logs de erro ou builds. O loop fica rodando de forma autônoma e só interrompe você quando há algo acionável. Loops duram até 3 dias — ideal para tarefas de longa duração.</p>
+              </div>
+              <div>
+                <span class="text-purple-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Defina o intervalo em linguagem natural ("a cada 5 minutos"); use para monitorar PRs, logs, builds ou deployments; lembretes únicos também funcionam ("às 15h"); loops expiram em 3 dias; ideal para tarefas de monitoramento passivo.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hack 26 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">26</span>
+            <span class="text-lg">🖥️</span>
+            <div>
+              <span class="font-medium">Hack 26 — VPS para Sessões Ativas</span>
+              <span class="text-neutral-500 text-sm ml-2">- Claude rodando mesmo com laptop fechado</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-purple-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">Execute o Claude Code em um servidor remoto (VPS) para que as sessões continuem rodando independentemente do seu computador local. Acesse via SSH para interagir ou conecte ao Telegram para controle por chat.</p>
+              </div>
+              <div>
+                <span class="text-purple-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Tarefas longas — refatorações grandes, análises de dados extensas, builds demorados — são interrompidas quando o laptop fecha ou a conexão cai. Em VPS, a sessão persiste indefinidamente e você retoma de onde parou.</p>
+              </div>
+              <div>
+                <span class="text-purple-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">VPS com tmux ou screen mantém sessões; SSH para acesso remoto; integração com Telegram para controle por chat; ideal para tarefas de mais de 1h; separa o poder computacional do seu hardware local.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hack 27 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">27</span>
+            <span class="text-lg">📱</span>
+            <div>
+              <span class="font-medium">Hack 27 — Controle Remoto pelo Celular</span>
+              <span class="text-neutral-500 text-sm ml-2">- Oriente o Claude de qualquer lugar</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-purple-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">O Claude Code permite controlar sessões locais pelo celular ou por qualquer navegador. O código continua na sua máquina local; apenas a conexão de controle remoto fica no dispositivo móvel.</p>
+              </div>
+              <div>
+                <span class="text-purple-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Você pode começar uma tarefa na mesa, sair para uma reunião e continuar orientando o Claude pelo celular enquanto ele trabalha no seu computador. Máxima flexibilidade sem abrir mão da segurança — o código nunca sai da máquina local.</p>
+              </div>
+              <div>
+                <span class="text-purple-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Sessão local + controle remoto; código sempre na máquina local; acesso via qualquer navegador; ideal para monitorar tarefas longas em movimento; combine com /loop para automação total.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-3-2')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors">Ver em Modal</button>
+        <a href="modulo-3-2.html" class="px-4 py-2 text-sm bg-purple-600 hover:bg-purple-500 text-white rounded-lg transition-colors">Ver Completo</a>
+      </div>
+    </div>
+
+    <!-- MODULO 3.3 -->
+    <div class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-purple-400 font-bold">3.3</span>
+          <span class="text-xs text-neutral-500">~50 min</span>
+        </div>
+        <h3 class="text-2xl font-bold mb-2">💪 Poder Máximo</h3>
+        <p class="text-neutral-400 text-sm">Ative o orçamento máximo de raciocínio com ultrathink para os problemas mais complexos, e configure permissões granulares para ganhar autonomia total com segurança real.</p>
+      </div>
+
+      <div class="divide-y divide-dark-600">
+        <!-- Hack 29 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">29</span>
+            <span class="text-lg">🧠</span>
+            <div>
+              <span class="font-medium">Hack 29 — Ultrathink</span>
+              <span class="text-neutral-500 text-sm ml-2">- Raciocínio máximo para decisões críticas</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-purple-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">A palavra <code class="bg-dark-600 px-1 rounded">ultrathink</code> no prompt faz o Claude alocar o orçamento máximo de pensamento — cerca de 32.000 tokens de raciocínio interno — antes de responder. O terminal fica colorido indicando que o modo está ativo.</p>
+              </div>
+              <div>
+                <span class="text-purple-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Para decisões de arquitetura, depuração complexa e grandes refatorações, mais tokens de raciocínio = análise mais profunda = melhores decisões. Não use para correções simples — o custo não justifica. Reserve para quando o impacto afeta o sistema inteiro.</p>
+              </div>
+              <div>
+                <span class="text-purple-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">~32.000 tokens de raciocínio; terminal muda de visual quando ativo; use para arquitetura, debugging complexo, refatorações grandes; não use para tarefas simples; também funciona com "think harder" e variações.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hack 30 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">30</span>
+            <span class="text-lg">🔐</span>
+            <div>
+              <span class="font-medium">Hack 30 — Editar Permissões</span>
+              <span class="text-neutral-500 text-sm ml-2">- Autonomia segura sem --dangerously-skip</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-purple-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">Em vez de usar <code class="bg-dark-600 px-1 rounded">--dangerously-skip-permissions</code>, configure uma lista de permissões explícitas para comandos seguros e uma lista de negação para qualquer coisa destrutiva (deletes, removes). A lista de negação tem prioridade absoluta.</p>
+              </div>
+              <div>
+                <span class="text-purple-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm"><code class="bg-dark-600 px-1 rounded">--dangerously-skip-permissions</code> se chama "perigoso" por um bom motivo — ele remove todas as salvaguardas. A abordagem inteligente é permitir explicitamente o que é seguro e negar o que é destrutivo. Você ganha a mesma velocidade e autonomia com muito menos risco.</p>
+              </div>
+              <div>
+                <span class="text-purple-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Lista de permissões para comandos seguros; lista de negação para destrutivos (rm, delete, drop); negação tem prioridade sobre permissão; configure no settings.json; granularidade total — permita só o que o projeto precisa.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-3-3')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors">Ver em Modal</button>
+        <a href="modulo-3-3.html" class="px-4 py-2 text-sm bg-purple-600 hover:bg-purple-500 text-white rounded-lg transition-colors">Ver Completo</a>
+      </div>
+    </div>
+
+    <!-- MODULO 3.4 -->
+    <div class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-purple-400 font-bold">3.4</span>
+          <span class="text-xs text-neutral-500">~60 min</span>
+        </div>
+        <h3 class="text-2xl font-bold mb-2">📊 Dados e Integrações</h3>
+        <p class="text-neutral-400 text-sm">Use APIs diretas para economizar contexto, consulte bancos de dados em linguagem natural via CLI, e acesse documentação sempre atualizada com o Context7 MCP — os últimos 3 hacks do curso.</p>
+      </div>
+
+      <div class="divide-y divide-dark-600">
+        <!-- Hack 24 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">24</span>
+            <span class="text-lg">⚡</span>
+            <div>
+              <span class="font-medium">Hack 24 — API Direta vs MCP</span>
+              <span class="text-neutral-500 text-sm ml-2">- Economize contexto com endpoints diretos</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-purple-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">Servidores MCP carregam todas as definições de ferramentas no contexto — conveniente, mas custoso em tokens. Quando você precisa apenas de uma operação específica (ex: ler uma base do Notion), codifique diretamente aquele endpoint da API em vez de carregar o MCP completo.</p>
+              </div>
+              <div>
+                <span class="text-purple-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Quando o contexto está apertado, cada token importa. Um MCP completo pode consumir centenas de tokens com definições que você não vai usar naquela sessão. A API direta injeta apenas o código necessário — economia enorme de contexto.</p>
+              </div>
+              <div>
+                <span class="text-purple-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">MCP = conveniente mas pesado; API direta = cirúrgica e leve; identifique se realmente precisa de todas as ferramentas do MCP; para operações simples e recorrentes, prefira endpoint direto; combine com CLAUDE.md para documentar a escolha.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hack 28 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">28</span>
+            <span class="text-lg">📊</span>
+            <div>
+              <span class="font-medium">Hack 28 — Análise de Dados sem SQL</span>
+              <span class="text-neutral-500 text-sm ml-2">- Linguagem natural para consultas complexas</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-purple-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">Conecte ferramentas de linha de comando (como a CLI do BigQuery) ao Claude Code e faça perguntas em linguagem natural. O Claude traduz para a consulta correta, executa e retorna a resposta. Nenhum SQL manual necessário.</p>
+              </div>
+              <div>
+                <span class="text-purple-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Analistas e desenvolvedores passam horas escrevendo e refinando consultas SQL. Com Claude como tradutor, você pergunta "Quais foram nossas 10 maiores fontes de receita no último trimestre?" e recebe o resultado diretamente. O padrão funciona para qualquer ferramenta baseada em CLI.</p>
+              </div>
+              <div>
+                <span class="text-purple-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Qualquer CLI pode ser o backend; linguagem natural → consulta correta; Claude executa e retorna resultado; funciona com BigQuery, PostgreSQL, MySQL, DuckDB e outros; não precisa saber SQL para obter análises poderosas.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hack 32 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-sm font-bold flex items-center justify-center flex-shrink-0">32</span>
+            <span class="text-lg">📚</span>
+            <div>
+              <span class="font-medium">Hack 32 — Context7 MCP</span>
+              <span class="text-neutral-500 text-sm ml-2">- Documentação atualizada no contexto</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-purple-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">O servidor MCP Context7 resolve o problema de corte de dados de treinamento. Ele possui documentação atualizada e específica por versão de milhares de bibliotecas populares, além de exemplos de código ao vivo. Ao pedir ao Claude para usar Context7, ele busca a documentação atual e injeta no contexto antes de escrever qualquer código.</p>
+              </div>
+              <div>
+                <span class="text-purple-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">O Claude foi treinado com dados até certa data — APIs mudam, métodos são deprecados, novos recursos são lançados. Sem Context7, o Claude pode gerar código para versões antigas de bibliotecas. Com Context7, o código gerado é compatível com a versão que você está usando.</p>
+              </div>
+              <div>
+                <span class="text-purple-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Instale via <code class="bg-dark-600 px-1 rounded">npx -y @upstash/context7-mcp</code>; peça ao Claude para "usar Context7" antes de codificar com bibliotecas específicas; suporte para Next.js, React, MongoDB, Tailwind e milhares de outras; documentação específica por versão.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-3-4')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors">Ver em Modal</button>
+        <a href="modulo-3-4.html" class="px-4 py-2 text-sm bg-purple-600 hover:bg-purple-500 text-white rounded-lg transition-colors">Ver Completo</a>
+      </div>
+    </div>
+
+    <!-- NAVEGACAO INFERIOR -->
+    <div class="flex flex-col sm:flex-row gap-4 mt-10">
+      <a href="../trilha2/index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">
+        ← Trilha 2: Intermediário
+      </a>
+      <a href="../../index.html" class="flex-1 text-center px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition-colors">
+        🎉 Ver todos os 32 Hacks
+      </a>
+    </div>
+  </div>
+
+  <!-- MODALS -->
+  <div id="modal-3-1" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3">
+          <span class="text-purple-400 font-bold">3.1</span>
+          <span class="font-semibold">🔀 Paralelismo Real</span>
+        </div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <iframe src="modulo-3-1.html" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+
+  <div id="modal-3-2" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3">
+          <span class="text-purple-400 font-bold">3.2</span>
+          <span class="font-semibold">🏗️ Automação e Infraestrutura</span>
+        </div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <iframe src="modulo-3-2.html" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+
+  <div id="modal-3-3" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3">
+          <span class="text-purple-400 font-bold">3.3</span>
+          <span class="font-semibold">💪 Poder Máximo</span>
+        </div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <iframe src="modulo-3-3.html" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+
+  <div id="modal-3-4" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3">
+          <span class="text-purple-400 font-bold">3.4</span>
+          <span class="font-semibold">📊 Dados e Integrações</span>
+        </div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <iframe src="modulo-3-4.html" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-dark-600 py-8 mt-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>32 Hacks do Claude Code · <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> · 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    function toggleTopic(button) {
+      const topicItem = button.closest('.topic-item');
+      const explanation = topicItem.querySelector('.topic-explanation');
+      const moduleCard = button.closest('.bg-dark-800');
+      moduleCard.querySelectorAll('.topic-explanation.active').forEach(exp => {
+        if (exp !== explanation) exp.classList.remove('active');
+      });
+      explanation.classList.toggle('active');
+    }
+
+    function openModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) { modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+    }
+
+    function closeModal() {
+      document.querySelectorAll('.modal').forEach(modal => modal.classList.add('hidden'));
+      document.body.style.overflow = 'auto';
+    }
+
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) {
+      themeToggleDarkIcon.classList.remove('hidden');
+      html.classList.remove('dark');
+    } else {
+      themeToggleLightIcon.classList.remove('hidden');
+    }
+    themeToggle.addEventListener('click', () => {
+      themeToggleDarkIcon.classList.toggle('hidden');
+      themeToggleLightIcon.classList.toggle('hidden');
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>

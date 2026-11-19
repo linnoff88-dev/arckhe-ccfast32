@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trilha 2 - Intermediário | 32 Hacks do Claude Code</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FACC15',
+            dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+
+    /* Light mode overrides - OBRIGATORIO */
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    /* Light mode - cores de acento (trilha blue) */
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+    html:not(.dark) .bg-blue-500\/10 { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+    html:not(.dark) .hover\:bg-blue-500\/30:hover { background-color: rgba(37, 99, 235, 0.18); }
+
+    /* Light mode - remove gradientes */
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+
+    /* Light mode - cores especiais */
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+
+    /* Light mode - nav */
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+
+    /* Light mode - emerald (trilha 1 nav) */
+    html:not(.dark) .hover\:text-emerald-400:hover { color: #059669; }
+    html:not(.dark) .hover\:bg-emerald-500\/10:hover { background-color: rgba(5, 150, 105, 0.08); }
+
+    /* Light mode - purple (trilha 3 nav) */
+    html:not(.dark) .hover\:text-purple-400:hover { color: #7c3aed; }
+    html:not(.dark) .hover\:bg-purple-500\/10:hover { background-color: rgba(124, 58, 237, 0.08); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAVIGATION -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">⚡</span>
+            <span class="font-bold text-lg hidden sm:inline">32 Hacks do Claude Code</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+            <span class="sm:hidden">T1</span><span class="hidden sm:inline">Iniciante</span>
+          </a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-blue-400 bg-blue-500/10">
+            <span class="sm:hidden">T2</span><span class="hidden sm:inline">Intermediário</span>
+          </a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors">
+            <span class="sm:hidden">T3</span><span class="hidden sm:inline">Avançado</span>
+          </a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-blue-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full mb-4">
+        TRILHA 2
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🚀 Intermediário</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">
+        Eleve seu domínio do Claude Code com subagentes paralelos, skills personalizadas, controle de rota e ferramentas visuais. Hacks 11 a 22 para quem já sabe o básico e quer resultados de nível profissional.
+      </p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-blue-400">4</div>
+          <div class="text-xs text-neutral-400">Módulos</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-blue-400">12</div>
+          <div class="text-xs text-neutral-400">Hacks</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-blue-400">~4h</div>
+          <div class="text-xs text-neutral-400">Duração</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-blue-400">Inter.</div>
+          <div class="text-xs text-neutral-400">Nível</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- QUICK NAV -->
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h2 class="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-4">Navegação Rápida</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <a href="modulo-2-1.html" class="bg-dark-800 rounded-xl border border-dark-600 p-4 hover:border-blue-500/50 transition-colors group">
+        <div class="text-blue-400 font-bold text-sm mb-1">2.1</div>
+        <div class="font-semibold text-sm group-hover:text-blue-400 transition-colors">🤖 Subagentes e Skills</div>
+        <div class="text-xs text-neutral-500 mt-1">~60 min</div>
+      </a>
+      <a href="modulo-2-2.html" class="bg-dark-800 rounded-xl border border-dark-600 p-4 hover:border-blue-500/50 transition-colors group">
+        <div class="text-blue-400 font-bold text-sm mb-1">2.2</div>
+        <div class="font-semibold text-sm group-hover:text-blue-400 transition-colors">📝 Claude.md como Sistema Vivo</div>
+        <div class="text-xs text-neutral-500 mt-1">~45 min</div>
+      </a>
+      <a href="modulo-2-3.html" class="bg-dark-800 rounded-xl border border-dark-600 p-4 hover:border-blue-500/50 transition-colors group">
+        <div class="text-blue-400 font-bold text-sm mb-1">2.3</div>
+        <div class="font-semibold text-sm group-hover:text-blue-400 transition-colors">🎯 Controle e Correção de Rota</div>
+        <div class="text-xs text-neutral-500 mt-1">~45 min</div>
+      </a>
+      <a href="modulo-2-4.html" class="bg-dark-800 rounded-xl border border-dark-600 p-4 hover:border-blue-500/50 transition-colors group">
+        <div class="text-blue-400 font-bold text-sm mb-1">2.4</div>
+        <div class="font-semibold text-sm group-hover:text-blue-400 transition-colors">👁️ Ferramentas Visuais</div>
+        <div class="text-xs text-neutral-500 mt-1">~70 min</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- DIVIDER -->
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-4">
+    <div class="flex items-center space-x-4">
+      <div class="flex-1 border-t border-dark-600"></div>
+      <span class="text-sm text-neutral-500 font-medium">Conteúdo Detalhado</span>
+      <div class="flex-1 border-t border-dark-600"></div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- MODULO 2.1 -->
+    <div class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-blue-400 font-bold">2.1</span>
+          <span class="text-xs text-neutral-500">~60 min</span>
+        </div>
+        <h3 class="text-2xl font-bold mb-2">🤖 Subagentes e Skills</h3>
+        <p class="text-neutral-400 text-sm">Delegue trabalho para subagentes paralelos e crie skills reutilizáveis para toda a equipe. Hacks 11, 12 e 13.</p>
+      </div>
+      <div class="divide-y divide-dark-600">
+
+        <!-- Hack 11 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-sm font-bold flex items-center justify-center flex-shrink-0">11</span>
+            <span class="text-lg">🧩</span>
+            <div>
+              <span class="font-medium">Subagentes Paralelos</span>
+              <span class="text-neutral-500 text-sm ml-2">- Paralelismo real no Claude Code</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-blue-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">Instrua a sessão principal para criar subagentes isolados ao lidar com problemas complexos. Cada subagente tem sua própria janela de contexto e pode usar um modelo diferente.</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Subagentes trabalham em paralelo: um pesquisa, outro escreve testes, um terceiro explora uma abordagem alternativa. O resultado chega mais rápido e com muito mais cobertura.</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Janela de contexto isolada por agente; modelo configurável por subagente; reporte centralizado para a sessão principal; paralelismo real (não sequencial).</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hack 12 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-sm font-bold flex items-center justify-center flex-shrink-0">12</span>
+            <span class="text-lg">⚙️</span>
+            <div>
+              <span class="font-medium">Skills Personalizadas</span>
+              <span class="text-neutral-500 text-sm ml-2">- Prompts reutilizáveis em .claude/skills</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-blue-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">Arquivos de prompt salvos em <code class="text-blue-400">.claude/skills/</code>. Cada arquivo define um procedimento específico: como revisar código, como varrer dívida técnica, como documentar uma API.</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Skills versionadas no repositório garantem que toda a equipe use exatamente os mesmos procedimentos. Invoque em linguagem natural ou com comando de barra (<code class="text-blue-400">/techdebt</code>).</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Diretório <code class="text-blue-400">.claude/skills/</code>; invocação por linguagem natural ou slash command; commit no repo; padronização de equipe; exemplos: <code>techdebt.md</code>, <code>code-review.md</code>.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hack 13 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-sm font-bold flex items-center justify-center flex-shrink-0">13</span>
+            <span class="text-lg">💰</span>
+            <div>
+              <span class="font-medium">Haiku para Subagentes</span>
+              <span class="text-neutral-500 text-sm ml-2">- Otimize custo sem perder qualidade</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-blue-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">Defina o modelo de cada subagente individualmente. Subagentes que processam grandes volumes de dados ou fazem tarefas simples usam Haiku; o agente principal usa Opus onde a qualidade importa.</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Processar centenas de milhares de tokens no Haiku e enviar apenas o resumo ao Opus mantém o custo controlado sem sacrificar a qualidade nas decisões críticas.</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Configuração de modelo por subagente; Haiku para volume/tarefas simples; Opus para síntese e decisão; redução de custo; pipeline de resumo.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-2-1')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-700 rounded-lg transition-colors">
+          Ver em Modal
+        </button>
+        <a href="modulo-2-1.html" class="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors">
+          Ver Completo
+        </a>
+      </div>
+    </div>
+
+    <!-- MODULO 2.2 -->
+    <div class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-blue-400 font-bold">2.2</span>
+          <span class="text-xs text-neutral-500">~45 min</span>
+        </div>
+        <h3 class="text-2xl font-bold mb-2">📝 Claude.md como Sistema Vivo</h3>
+        <p class="text-neutral-400 text-sm">Transforme o claude.md em memória persistente do projeto e da equipe. Hacks 14 e 15.</p>
+      </div>
+      <div class="divide-y divide-dark-600">
+
+        <!-- Hack 14 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-sm font-bold flex items-center justify-center flex-shrink-0">14</span>
+            <span class="text-lg">🔄</span>
+            <div>
+              <span class="font-medium">Atualizar Constantemente o Claude.md</span>
+              <span class="text-neutral-500 text-sm ml-2">- Memória que cresce com o projeto</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-blue-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">Sempre que houver nova descoberta, nova skill, novo padrão ou convenção, atualize o claude.md. Na próxima sessão, o Claude já sabe tudo — erros anteriores não se repetem.</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">O claude.md é carregado em toda conversa. Torná-lo cada vez mais preciso sobre o seu negócio e projeto é a forma mais eficiente de aumentar a qualidade das respostas ao longo do tempo.</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Atualização após descobertas; limite prático de 150–200 linhas; cuidado com inchaço; claude.md é contexto pago em toda sessão; padrões, convenções e pegadinhas documentadas.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hack 15 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-sm font-bold flex items-center justify-center flex-shrink-0">15</span>
+            <span class="text-lg">🗂️</span>
+            <div>
+              <span class="font-medium">Claude.md Apontando para Outros Arquivos</span>
+              <span class="text-neutral-500 text-sm ml-2">- Enxugue o contexto, mantenha a profundidade</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-blue-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">Mantenha o claude.md enxuto criando links para arquivos separados: guias de estilo, contexto de negócio, documentos de referência. O prompt de sistema aponta para onde encontrar as informações, não as carrega todas.</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Contexto carregado em toda sessão tem custo. Separar referências detalhadas em arquivos dedicados reduz tokens por sessão e mantém o claude.md legível e fácil de manter.</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Arquivos separados por domínio (estilo, negócio, referência); claude.md como índice; links relativos no repositório; carregamento sob demanda; separação de responsabilidades.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-2-2')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-700 rounded-lg transition-colors">
+          Ver em Modal
+        </button>
+        <a href="modulo-2-2.html" class="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors">
+          Ver Completo
+        </a>
+      </div>
+    </div>
+
+    <!-- MODULO 2.3 -->
+    <div class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-blue-400 font-bold">2.3</span>
+          <span class="text-xs text-neutral-500">~45 min</span>
+        </div>
+        <h3 class="text-2xl font-bold mb-2">🎯 Controle e Correção de Rota</h3>
+        <p class="text-neutral-400 text-sm">Interrompa cedo, questione resultados medíocres e reverta o histórico quando necessário. Hacks 16, 17 e 18.</p>
+      </div>
+      <div class="divide-y divide-dark-600">
+
+        <!-- Hack 16 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-sm font-bold flex items-center justify-center flex-shrink-0">16</span>
+            <span class="text-lg">✋</span>
+            <div>
+              <span class="font-medium">Interrompa Cedo</span>
+              <span class="text-neutral-500 text-sm ml-2">- Contexto desperdiçado é custo real</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-blue-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">Se o Claude começar a seguir o caminho errado, pressione Esc imediatamente. Corrija o rumo e refaça o prompt antes de ele continuar gerando tokens na direção errada.</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Cada token gasto na direção errada é contexto desperdiçado que não retorna. Interromper cedo e redirecionar preserva janela de contexto e evita resultados que precisarão ser descartados.</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Tecla Esc para interrupção imediata; prompt de redirecionamento preciso; custo do contexto; correção antes que o erro se propague; orientação antecipada.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hack 17 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-sm font-bold flex items-center justify-center flex-shrink-0">17</span>
+            <span class="text-lg">💬</span>
+            <div>
+              <span class="font-medium">Questione Agressivamente</span>
+              <span class="text-neutral-500 text-sm ml-2">- Exija a melhor versão, não a primeira</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-blue-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">Se o resultado for apenas "ok", pressione: "Descarte isso, faça uma versão mais elegante" ou "Tente uma abordagem completamente diferente." O Claude geralmente entrega muito melhor na segunda tentativa.</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">A primeira resposta tende a ser conservadora. Ao questionar e exigir mais, você ativa um nível diferente de esforço do modelo. Quando uma versão melhor surgir, documente o padrão no claude.md.</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Pressão para segunda tentativa; prompts de rejeição direta; "abordagem completamente diferente"; documentar padrões descobertos no claude.md; iteração de qualidade.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hack 18 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-sm font-bold flex items-center justify-center flex-shrink-0">18</span>
+            <span class="text-lg">⏪</span>
+            <div>
+              <span class="font-medium">/rewind</span>
+              <span class="text-neutral-500 text-sm ml-2">- Volte no tempo sem recomeçar</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-blue-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">O comando <code class="text-blue-400">/rewind</code> reverte a conversa a um ponto anterior. Não é preciso começar do zero — apenas escolha onde o histórico deve parar e continue dali.</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Quando uma sequência de prompts leva a um beco sem saída, <code>/rewind</code> economiza tempo e tokens. Super rápido e limpo, sem perder o contexto válido acumulado antes do desvio.</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Comando <code>/rewind</code>; reversão de histórico de conversa; seleção do ponto de retorno; alternativa a reiniciar a sessão; recuperação de beco sem saída.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-2-3')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-700 rounded-lg transition-colors">
+          Ver em Modal
+        </button>
+        <a href="modulo-2-3.html" class="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors">
+          Ver Completo
+        </a>
+      </div>
+    </div>
+
+    <!-- MODULO 2.4 -->
+    <div class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-blue-400 font-bold">2.4</span>
+          <span class="text-xs text-neutral-500">~70 min</span>
+        </div>
+        <h3 class="text-2xl font-bold mb-2">👁️ Ferramentas Visuais</h3>
+        <p class="text-neutral-400 text-sm">Notificações por hooks, screenshots no loop de desenvolvimento e controle do navegador via DevTools. Hacks 19, 20, 21 e 22.</p>
+      </div>
+      <div class="divide-y divide-dark-600">
+
+        <!-- Hack 19 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-sm font-bold flex items-center justify-center flex-shrink-0">19</span>
+            <span class="text-lg">🔔</span>
+            <div>
+              <span class="font-medium">Hooks para Notificações</span>
+              <span class="text-neutral-500 text-sm ml-2">- Liberte-se do ciclo de espera</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-blue-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">Configure hooks via <code class="text-blue-400">/hooks</code> para acionar ações quando o Claude terminar. Uso mais comum: alerta sonoro ao concluir uma tarefa.</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Com hooks, você não precisa vigiar a tela. Execute 15 sessões paralelas do Claude Code e reaja apenas quando uma precisar da sua intervenção. Produtividade multiplicada.</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Comando <code>/hooks</code>; gatilho de conclusão; alerta sonoro; sessões paralelas; liberação de atenção; automação de notificação.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hack 20 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-sm font-bold flex items-center justify-center flex-shrink-0">20</span>
+            <span class="text-lg">📸</span>
+            <div>
+              <span class="font-medium">Capturas de Tela</span>
+              <span class="text-neutral-500 text-sm ml-2">- O Claude vê o que você vê</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-blue-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">Envie screenshots ao Claude: mensagens de erro, sites de inspiração, referências de design. Também funciona como ciclo de autoverificação: "Tire screenshot e diga se o layout está correto."</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Acelera o loop de desenvolvimento visual. O Claude vê o resultado real, identifica problemas e propõe correções sem você precisar descrever o que está errado em texto.</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Entrada multimodal (imagem); ciclo desenhar-capturar-implementar; autoverificação de layout; referências de design; eliminação de descrições textuais longas.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hack 21 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-sm font-bold flex items-center justify-center flex-shrink-0">21</span>
+            <span class="text-lg">🌐</span>
+            <div>
+              <span class="font-medium">Chrome DevTools</span>
+              <span class="text-neutral-500 text-sm ml-2">- Teste comportamento real no navegador</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-blue-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">O Claude pode abrir um navegador, interagir com o app e verificar funcionalidades reais — botões, formulários, fluxos completos — sem precisar de uma API disponível.</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Ideal para front-end: o Claude testa o comportamento real, não apenas o código. Também funciona para preencher formulários e automatizar interações quando não há API.</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Automação de navegador; teste de comportamento real; interação com UI; ciclo screenshot + DevTools; automação sem API; verificação de front-end.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hack 22 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-sm font-bold flex items-center justify-center flex-shrink-0">22</span>
+            <span class="text-lg">🎨</span>
+            <div>
+              <span class="font-medium">Clonar Sites de Inspiração</span>
+              <span class="text-neutral-500 text-sm ml-2">- Design sem resultado genérico de IA</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-blue-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">Tire screenshots de sites que você admira, envie ao Claude e diga "Faça parecer com isso." Você também pode enviar o HTML e CSS da fonte diretamente como inspiração.</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">O Claude recria padrões de design específicos sem produzir o resultado genérico de IA. Com referências visuais concretas, a fidelidade ao estilo desejado aumenta drasticamente.</p>
+              </div>
+              <div>
+                <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Referência visual via screenshot; envio de HTML/CSS de inspiração; fidelidade de estilo; antipadrão de output genérico; recriação de padrões de design.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-2-4')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-700 rounded-lg transition-colors">
+          Ver em Modal
+        </button>
+        <a href="modulo-2-4.html" class="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors">
+          Ver Completo
+        </a>
+      </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="flex flex-col sm:flex-row gap-4 mt-8">
+      <a href="../trilha1/index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">
+        ← Trilha 1: Iniciante
+      </a>
+      <a href="../trilha3/index.html" class="flex-1 text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition-colors">
+        Trilha 3: Avançado →
+      </a>
+    </div>
+  </main>
+
+  <!-- MODALS -->
+  <div id="modal-2-1" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3">
+          <span class="text-blue-400 font-bold">2.1</span>
+          <span class="font-semibold">🤖 Subagentes e Skills</span>
+        </div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <iframe src="modulo-2-1.html" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+
+  <div id="modal-2-2" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3">
+          <span class="text-blue-400 font-bold">2.2</span>
+          <span class="font-semibold">📝 Claude.md como Sistema Vivo</span>
+        </div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <iframe src="modulo-2-2.html" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+
+  <div id="modal-2-3" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3">
+          <span class="text-blue-400 font-bold">2.3</span>
+          <span class="font-semibold">🎯 Controle e Correção de Rota</span>
+        </div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <iframe src="modulo-2-3.html" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+
+  <div id="modal-2-4" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3">
+          <span class="text-blue-400 font-bold">2.4</span>
+          <span class="font-semibold">👁️ Ferramentas Visuais</span>
+        </div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <iframe src="modulo-2-4.html" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-dark-600 py-8 mt-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>32 Hacks do Claude Code — <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> — 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    function toggleTopic(button) {
+      const topicItem = button.closest('.topic-item');
+      const explanation = topicItem.querySelector('.topic-explanation');
+      const moduleCard = button.closest('.bg-dark-800');
+      moduleCard.querySelectorAll('.topic-explanation.active').forEach(exp => {
+        if (exp !== explanation) exp.classList.remove('active');
+      });
+      explanation.classList.toggle('active');
+    }
+    function openModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) { modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+    }
+    function closeModal() {
+      document.querySelectorAll('.modal').forEach(modal => modal.classList.add('hidden'));
+      document.body.style.overflow = 'auto';
+    }
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) {
+      themeToggleDarkIcon.classList.remove('hidden'); html.classList.remove('dark');
+    } else { themeToggleLightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => {
+      themeToggleDarkIcon.classList.toggle('hidden'); themeToggleLightIcon.classList.toggle('hidden');
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>

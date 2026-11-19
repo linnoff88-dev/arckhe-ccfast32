@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 2.4 — Ferramentas Visuais | 32 Hacks do Claude Code</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FACC15',
+            dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+    html:not(.dark) .bg-blue-500\/10 { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+    html:not(.dark) .hover\:bg-blue-500\/30:hover { background-color: rgba(37, 99, 235, 0.18); }
+
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+
+    html:not(.dark) .hover\:text-emerald-400:hover { color: #059669; }
+    html:not(.dark) .hover\:bg-emerald-500\/10:hover { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .hover\:text-purple-400:hover { color: #7c3aed; }
+    html:not(.dark) .hover\:bg-purple-500\/10:hover { background-color: rgba(124, 58, 237, 0.08); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAVIGATION -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">⚡</span>
+            <span class="font-bold text-lg hidden sm:inline">32 Hacks do Claude Code</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+            <span class="sm:hidden">T1</span><span class="hidden sm:inline">Iniciante</span>
+          </a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-blue-400 bg-blue-500/10">
+            <span class="sm:hidden">T2</span><span class="hidden sm:inline">Intermediário</span>
+          </a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors">
+            <span class="sm:hidden">T3</span><span class="hidden sm:inline">Avançado</span>
+          </a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-blue-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-blue-400">Trilha 2 — Intermediário</a>
+      <span>/</span>
+      <span class="text-blue-400">Módulo 2.4</span>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-blue-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full mb-4">
+        MÓDULO 2.4
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">👁️ Ferramentas Visuais</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">
+        Hooks para liberar sua atenção, screenshots no loop de desenvolvimento, controle real do navegador via DevTools e clonagem de designs de inspiração. O Claude vê e interage com o mundo visual.
+      </p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-blue-400">4</div>
+          <div class="text-xs text-neutral-400">Hacks</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-blue-400">70</div>
+          <div class="text-xs text-neutral-400">Minutos</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-blue-400">Inter.</div>
+          <div class="text-xs text-neutral-400">Nível</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-blue-400">Visual</div>
+          <div class="text-xs text-neutral-400">Tipo</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- HACK 19 -->
+    <section id="hack-19" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">19</span>
+        <h2 class="text-2xl font-bold">🔔 Hooks para Notificações</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Hooks permitem acionar ações automáticas em eventos do Claude Code. O uso mais valioso: <strong class="text-blue-400">alerta sonoro ao concluir</strong>. Isso libera você para trabalhar em outra coisa sem precisar monitorar a tela — e torna viável executar múltiplas sessões em paralelo.
+      </p>
+
+      <!-- Conceito Principal -->
+      <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center">
+          <span class="mr-2">⚙️</span> Configurando Hooks com /hooks
+        </h3>
+        <p class="text-neutral-300 mb-4">O comando <code class="text-blue-400">/hooks</code> abre a interface de configuração de hooks. Você define o evento gatilho e a ação a executar.</p>
+        <ul class="space-y-2 text-neutral-300">
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Evento: conclusão de tarefa</strong> — dispara quando o Claude finaliza a resposta</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Ação: comando shell</strong> — qualquer comando: play de áudio, notificação do sistema, webhook</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Múltiplos hooks:</strong> você pode encadear várias ações por evento</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Sessões paralelas:</strong> com notificações, 15 sessões simultâneas se tornam gerenciáveis</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Terminal Example -->
+      <div class="bg-dark-900 rounded-xl border border-dark-600 p-6 mb-6 font-mono text-sm">
+        <div class="text-neutral-500 mb-3"># Exemplos de hooks comuns</div>
+        <div class="text-neutral-300 leading-relaxed">
+          <span class="text-neutral-500"># Alerta sonoro no macOS ao concluir</span><br>
+          <span class="text-blue-400">on_complete:</span> afplay /System/Library/Sounds/Glass.aiff<br><br>
+          <span class="text-neutral-500"># Notificação do sistema no Linux</span><br>
+          <span class="text-blue-400">on_complete:</span> notify-send "Claude Code" "Tarefa concluída!"<br><br>
+          <span class="text-neutral-500"># Webhook para Slack</span><br>
+          <span class="text-blue-400">on_complete:</span> curl -X POST $SLACK_WEBHOOK -d '{"text":"Claude terminou"}'<br><br>
+          <span class="text-neutral-500"># Acesso via comando</span><br>
+          <span class="text-blue-400">Você:</span> /hooks
+        </div>
+      </div>
+
+      <!-- Dica Prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> Dica Prática — Sessões Paralelas
+        </h3>
+        <p class="text-neutral-300">Com hooks configurados, o fluxo ideal é: inicie 5–10 sessões do Claude Code em terminais diferentes, cada uma com uma tarefa independente, e vá trabalhar em outra coisa. Quando uma sessão terminar, o alerta avisa. Você só intervém quando necessário — multiplicando sua capacidade de trabalho paralelo.</p>
+      </div>
+
+      <!-- Fazer vs Evitar -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ O que FAZER</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Configurar alerta sonoro para liberar atenção</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Usar hooks para tarefas longas em background</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Combinar com sessões paralelas para máxima produtividade</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Configurar webhook para integrações com ferramentas de equipe</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ O que NÃO fazer</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Ficar monitorando a tela esperando terminar</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Usar hooks pesados que atrasam o próximo prompt</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Configurar hooks sem testar o comando de ação</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Ignorar esta funcionalidade por parecer simples</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- HACK 20 -->
+    <section id="hack-20" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">20</span>
+        <h2 class="text-2xl font-bold">📸 Capturas de Tela</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        O Claude é multimodal — ele processa imagens. Isso abre um ciclo de desenvolvimento visual poderoso: <strong class="text-blue-400">desenhe, capture, implemente, repita</strong>. Envie screenshots de erros, referências de design ou do próprio app sendo desenvolvido para que o Claude veja o que você está vendo.
+      </p>
+
+      <!-- Conceito Principal -->
+      <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center">
+          <span class="mr-2">🔄</span> O Ciclo Visual de Desenvolvimento
+        </h3>
+        <p class="text-neutral-300 mb-4">Em vez de descrever o problema em texto longo, mostre. Em vez de explicar o que está errado no layout, tire um screenshot e pergunte. O Claude identifica problemas visuais com precisão.</p>
+        <ul class="space-y-2 text-neutral-300">
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Mensagens de erro:</strong> screenshot do terminal ou browser — o Claude vê o stack trace completo</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Referências de design:</strong> "faça como este site" — envie a screenshot e receba implementação fiel</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Autoverificação:</strong> "tire um screenshot e diga se o layout está correto" — loop automático</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Progresso iterativo:</strong> implementa → screenshot → ajusta → screenshot → aprovado</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Terminal Example -->
+      <div class="bg-dark-900 rounded-xl border border-dark-600 p-6 mb-6 font-mono text-sm">
+        <div class="text-neutral-500 mb-3"># Fluxo de autoverificação visual</div>
+        <div class="text-neutral-300 leading-relaxed">
+          <span class="text-blue-400">Você:</span> "Implemente o componente de card de produto"<br>
+          <span class="text-neutral-500"># Claude implementa...</span><br><br>
+          <span class="text-blue-400">Você:</span> "Tire uma screenshot do resultado no browser<br>
+          e diga se o layout está correto conforme o<br>
+          design system."<br><br>
+          <span class="text-blue-400">Claude:</span> [tira screenshot, analisa]<br>
+          "O espaçamento interno está maior que o definido.<br>
+          O botão deveria estar alinhado à esquerda, não centralizado.<br>
+          Vou corrigir..."<br><br>
+          <span class="text-neutral-500"># Loop até aprovação visual</span>
+        </div>
+      </div>
+
+      <!-- Dica Prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> Dica Prática
+        </h3>
+        <p class="text-neutral-300">Para o ciclo de autoverificação funcionar, o Claude precisa de acesso a ferramentas de screenshot (configuradas via MCP ou permissão de terminal). Configure isso antes de começar sessões de desenvolvimento front-end intenso — economiza dezenas de mensagens de ida e volta.</p>
+      </div>
+
+      <!-- Fazer vs Evitar -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ O que FAZER</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Enviar screenshots em vez de descrever visualmente</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Usar o ciclo implementa→screenshot→ajusta</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Pedir autoverificação visual ao Claude</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Enviar referências visuais concretas para design</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ O que NÃO fazer</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Descrever em texto longo o que uma imagem mostraria</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Enviar screenshots de baixa resolução difíceis de ler</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Pular a etapa de verificação visual no desenvolvimento front-end</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Usar screenshots apenas para reportar erros (use também para design)</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- HACK 21 -->
+    <section id="hack-21" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">21</span>
+        <h2 class="text-2xl font-bold">🌐 Chrome DevTools</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Além de ver, o Claude pode <strong class="text-blue-400">interagir com o navegador</strong>. Ele abre o Chrome, navega até o app, clica em botões, preenche formulários e verifica o comportamento real da aplicação. Essencial para desenvolvimento front-end e automação de fluxos sem API.
+      </p>
+
+      <!-- Conceito Principal -->
+      <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center">
+          <span class="mr-2">🖱️</span> O que o Claude Pode Fazer no Navegador
+        </h3>
+        <p class="text-neutral-300 mb-4">Via Chrome DevTools Protocol, o Claude tem controle programático completo do navegador — muito além de apenas tirar screenshots.</p>
+        <ul class="space-y-2 text-neutral-300">
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Navegação:</strong> abrir URLs, clicar em links, navegar pelo histórico</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Interação com UI:</strong> clicar botões, preencher formulários, fazer scroll</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Inspeção:</strong> verificar console, network tab, elementos DOM</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Automação sem API:</strong> preencher formulários e extrair dados quando não há endpoint disponível</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Terminal Example -->
+      <div class="bg-dark-900 rounded-xl border border-dark-600 p-6 mb-6 font-mono text-sm">
+        <div class="text-neutral-500 mb-3"># Exemplos de uso do DevTools</div>
+        <div class="text-neutral-300 leading-relaxed">
+          <span class="text-blue-400">Você:</span> "Abra o app em localhost:3000, faça login com<br>
+          test@example.com / senha123 e verifique se o<br>
+          dashboard carrega sem erros no console."<br><br>
+          <span class="text-neutral-500"># Claude abre Chrome, navega, faz login, inspeciona console</span><br><br>
+          <span class="text-blue-400">Claude:</span> "Login realizado com sucesso. Dashboard carregou.<br>
+          Encontrei 2 warnings no console:<br>
+          - Prop 'key' duplicada no componente ProductList<br>
+          - Imagem sem atributo alt em /products/thumbnail"<br><br>
+          <span class="text-blue-400">Você:</span> "Corrija os dois problemas."
+        </div>
+      </div>
+
+      <!-- Dados/Pesquisa -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center">
+          <span class="mr-2">📊</span> Casos de Uso por Área
+        </h3>
+        <ul class="space-y-2 text-neutral-300">
+          <li><strong class="text-blue-400">Front-end:</strong> teste de responsividade, verificação de acessibilidade, debugging de CSS</li>
+          <li><strong class="text-blue-400">QA manual:</strong> fluxos completos de teste sem escrever código de automação</li>
+          <li><strong class="text-blue-400">Scraping:</strong> extração de dados de sites sem API (quando permitido)</li>
+          <li><strong class="text-blue-400">Formulários:</strong> preenchimento de sistemas legados onde não existe integração</li>
+        </ul>
+      </div>
+
+      <!-- Dica Prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> Dica Prática
+        </h3>
+        <p class="text-neutral-300">Combine DevTools com screenshots num ciclo iterativo de desenvolvimento front-end: implemente, deixe o Claude abrir o browser, verificar o resultado visual, checar o console para erros, e sugerir ou aplicar as correções. Você avalia e aprova. É um par programmer que testa automaticamente o próprio código.</p>
+      </div>
+
+      <!-- Fazer vs Evitar -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ O que FAZER</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Pedir verificação de console após implementar features</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Usar para testar fluxos completos de usuário</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Combinar com screenshots para ciclo visual completo</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Aproveitar para automação de formulários sem API</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ O que NÃO fazer</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Usar para scraping de sites onde é proibido</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Pedir interações com dados sensíveis (senhas reais, produção)</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Ignorar warnings do console como menos importantes</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Usar em ambiente de produção sem isolamento</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- HACK 22 -->
+    <section id="hack-22" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">22</span>
+        <h2 class="text-2xl font-bold">🎨 Clonar Sites de Inspiração</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Em vez de descrever o estilo desejado em palavras — o que frequentemente resulta em output genérico de IA — <strong class="text-blue-400">mostre diretamente</strong>. Screenshots de sites que você admira servem como referência precisa. O Claude recria padrões de design específicos com fidelidade muito maior do que a partir de descrições textuais.
+      </p>
+
+      <!-- Conceito Principal -->
+      <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center">
+          <span class="mr-2">🖼️</span> Da Referência Visual ao Código
+        </h3>
+        <p class="text-neutral-300 mb-4">Referências visuais concretas eliminam a ambiguidade que gera output genérico. O Claude analisa os padrões de espaçamento, hierarquia tipográfica, uso de cores e componentes na screenshot e os recria no seu contexto.</p>
+        <ul class="space-y-2 text-neutral-300">
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Screenshot do site:</strong> captura de tela como referência visual direta</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>HTML/CSS da fonte:</strong> inspecione e cole o código real para máxima fidelidade</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>"Faça parecer com isso":</strong> instrução simples + referência visual = resultado preciso</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Anti-genérico:</strong> referências específicas produzem resultados únicos, não templates</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Terminal Example -->
+      <div class="bg-dark-900 rounded-xl border border-dark-600 p-6 mb-6 font-mono text-sm">
+        <div class="text-neutral-500 mb-3"># Fluxos de clonagem de design</div>
+        <div class="text-neutral-300 leading-relaxed">
+          <span class="text-neutral-500"># Abordagem 1: Screenshot como referência</span><br>
+          <span class="text-blue-400">Você:</span> [envia screenshot de landing page]<br>
+          "Recrie este estilo de hero section para nosso produto.<br>
+          Use nossas cores (primary: #3B82F6) mas mantenha<br>
+          o layout e a hierarquia tipográfica."<br><br>
+          <span class="text-neutral-500"># Abordagem 2: HTML/CSS da fonte</span><br>
+          <span class="text-blue-400">Você:</span> "Aqui está o CSS do componente que gostei:<br>
+          [cola o CSS] Use este padrão de espaçamento e<br>
+          sombra para nosso card de produto."<br><br>
+          <span class="text-neutral-500"># Resultado: design fiel, não genérico</span>
+        </div>
+      </div>
+
+      <!-- Dados/Pesquisa -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center">
+          <span class="mr-2">📊</span> Por que Referências Visuais Vencem Descrições
+        </h3>
+        <ul class="space-y-2 text-neutral-300">
+          <li><strong class="text-blue-400">Ambiguidade zero:</strong> "espaçamento generoso" é subjetivo; uma screenshot mostra o exato pixel</li>
+          <li><strong class="text-blue-400">Consistência:</strong> detalhes visuais sutis (sombras, raios de borda) são capturados automaticamente</li>
+          <li><strong class="text-blue-400">Velocidade:</strong> uma imagem comunica em 1 segundo o que levaria 200 palavras para descrever</li>
+          <li><strong class="text-blue-400">Qualidade:</strong> resultados ficam muito mais próximos do que você realmente quer</li>
+        </ul>
+      </div>
+
+      <!-- Dica Prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> Dica Prática
+        </h3>
+        <p class="text-neutral-300">Para resultados ainda melhores, combine screenshot + HTML/CSS da fonte. Use o DevTools do browser para inspecionar o componente que você admira, copie o HTML e CSS relevantes, e envie junto com a screenshot. O Claude terá tanto a referência visual quanto a estrutura semântica para trabalhar — resultado de altíssima fidelidade.</p>
+      </div>
+
+      <!-- Alerta -->
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-3 flex items-center">
+          <span class="mr-2">⚠️</span> Respeite Licenças e Direitos Autorais
+        </h3>
+        <p class="text-neutral-300">Usar referências para <strong>inspiração de estilo</strong> é diferente de copiar código proprietário. Use para aprender padrões de design, não para replicar código de terceiros sem autorização. Clonar a estrutura visual é a prática; copiar o código fonte é outra questão.</p>
+      </div>
+
+      <!-- Fazer vs Evitar -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ O que FAZER</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Usar screenshots como referência de estilo e layout</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Combinar screenshot + HTML/CSS para máxima fidelidade</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Especificar as próprias cores/marca ao solicitar</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Usar referências múltiplas para combinar o melhor de cada</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ O que NÃO fazer</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Copiar código proprietário sem verificar a licença</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Descrever estilo em texto quando a screenshot está disponível</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Usar referências de baixa qualidade ou resolução</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Esquecer de adaptar cores e identidade visual para a sua marca</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-blue-900/40 via-dark-800 to-dark-800 rounded-xl border border-blue-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center">
+          <span class="mr-3">✅</span> Resumo do Módulo 2.4
+        </h2>
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3">
+            <span class="text-blue-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Hooks com /hooks</strong>
+              <span class="text-neutral-400"> — alertas ao concluir; libera atenção para múltiplas sessões paralelas</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-blue-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Ciclo implementa→screenshot→ajusta</strong>
+              <span class="text-neutral-400"> — o Claude vê o resultado e faz autocorreção visual</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-blue-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Chrome DevTools para comportamento real</strong>
+              <span class="text-neutral-400"> — teste de UI, debugging de console, automação sem API</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-blue-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Screenshots como referência de design</strong>
+              <span class="text-neutral-400"> — elimina output genérico; fidelidade visual precisa</span>
+            </div>
+          </div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-blue-400 mb-2">Trilha concluída!</h3>
+          <p class="text-neutral-300">Você completou a Trilha 2 — Intermediário. Continue para a Trilha 3 — Avançado e domine as técnicas de nível expert.</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="modulo-2-3.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">
+            ← Módulo Anterior (2.3)
+          </a>
+          <a href="../trilha3/index.html" class="flex-1 text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition-colors">
+            Trilha 3: Avançado →
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-dark-600 py-8 mt-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>32 Hacks do Claude Code — <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> — 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) {
+      themeToggleDarkIcon.classList.remove('hidden'); html.classList.remove('dark');
+    } else { themeToggleLightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => {
+      themeToggleDarkIcon.classList.toggle('hidden'); themeToggleLightIcon.classList.toggle('hidden');
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>

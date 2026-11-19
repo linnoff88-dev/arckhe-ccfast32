@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 1.3 — Fluxo de Trabalho Inteligente | 32 Hacks do Claude Code</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FACC15',
+            dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+
+    /* Light mode overrides - OBRIGATORIO */
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    /* Light mode - cores de acento (trilha emerald) */
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+    html:not(.dark) .bg-emerald-500\/10 { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+    html:not(.dark) .hover\:bg-emerald-500\/30:hover { background-color: rgba(5, 150, 105, 0.18); }
+
+    /* Light mode - remove gradientes (fundo uniforme) */
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+
+    /* Light mode - cores especiais */
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+
+    /* Light mode - nav */
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAVIGATION -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">⚡</span>
+            <span class="font-bold text-lg hidden sm:inline">32 Hacks do Claude Code</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-emerald-400 bg-emerald-500/10">
+            <span class="sm:hidden">T1</span><span class="hidden sm:inline">Iniciante</span>
+          </a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+            <span class="sm:hidden">T2</span><span class="hidden sm:inline">Intermediário</span>
+          </a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors">
+            <span class="sm:hidden">T3</span><span class="hidden sm:inline">Avançado</span>
+          </a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-emerald-400 transition-colors">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-emerald-400 transition-colors">Trilha 1</a>
+      <span>/</span>
+      <span class="text-emerald-400">Módulo 1.3</span>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-emerald-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded-full mb-4">
+        MÓDULO 1.3
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🔄 Fluxo de Trabalho Inteligente</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">Quatro hacks para eliminar retrabalho e garantir que cada iteração com o Claude seja precisa, alinhada e verificada. A diferença entre um fluxo frustrante e um fluxo que acelera.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">4</div>
+          <div class="text-xs text-neutral-400">Hacks</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">80</div>
+          <div class="text-xs text-neutral-400">Minutos</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">Base</div>
+          <div class="text-xs text-neutral-400">Nível</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">Fluxo</div>
+          <div class="text-xs text-neutral-400">Tipo</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTEUDO -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- HACK 7: Plan Mode -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">7</span>
+        <h2 class="text-2xl font-bold">📋 Hack 7 — Plan Mode</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        O <strong class="text-emerald-400">Plan Mode</strong> é a diferença entre um desenvolvedor que revisita o mesmo problema várias vezes e um que acerta na primeira tentativa. Ativado com <strong class="text-emerald-400">Shift+Tab</strong>, o modo coloca o Claude em modo de leitura e planejamento — ele analisa, questiona e mapeia a abordagem completa antes de tocar uma linha sequer de código.
+      </p>
+
+      <!-- Conceito principal -->
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-4 flex items-center"><span class="mr-2">💡</span> Como o Plan Mode funciona</h3>
+        <p class="text-neutral-300 mb-4">No Plan Mode, o Claude segue um protocolo rígido:</p>
+        <ul class="space-y-3 text-neutral-300">
+          <li class="flex items-start space-x-2">
+            <span class="text-emerald-400 mt-1 font-bold">1.</span>
+            <div><strong class="text-white">Leitura completa:</strong> Lê todos os arquivos relevantes sem modificar nada.</div>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-emerald-400 mt-1 font-bold">2.</span>
+            <div><strong class="text-white">Perguntas de esclarecimento:</strong> Identifica ambiguidades e as pergunta antes de continuar.</div>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-emerald-400 mt-1 font-bold">3.</span>
+            <div><strong class="text-white">Mapeamento da abordagem:</strong> Descreve cada etapa do que vai fazer, em ordem.</div>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-emerald-400 mt-1 font-bold">4.</span>
+            <div><strong class="text-white">Aguarda aprovação:</strong> Não executa nada até você confirmar o plano.</div>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-emerald-400 mt-1 font-bold">5.</span>
+            <div><strong class="text-white">Execução aprovada:</strong> Implementa o plano exatamente como descrito e aprovado.</div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Exemplo de terminal -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4 flex items-center"><span class="mr-2">💻</span> Plan Mode na prática</h3>
+        <div class="bg-dark-900 rounded-lg p-4 font-mono text-sm">
+          <p class="text-neutral-500"># Ative com Shift+Tab antes de descrever a tarefa</p>
+          <p class="text-emerald-400 mt-2">[Plan Mode ATIVO]</p>
+          <p class="text-neutral-300 mt-1">"Adicione sistema de notificações em tempo real"</p>
+          <p class="text-neutral-500 mt-2">─── Claude planeja ─────────────────────────────</p>
+          <p class="text-neutral-400 mt-1">Lerei: socket.ts, api/events.ts, components/...</p>
+          <p class="text-yellow-400 mt-1">❓ WebSocket ou Server-Sent Events?</p>
+          <p class="text-yellow-400">❓ Notificações persistem após reload?</p>
+          <p class="text-neutral-400 mt-2">Plano (após suas respostas):</p>
+          <p class="text-neutral-400">1. Criar socket.ts com conexão WS</p>
+          <p class="text-neutral-400">2. Adicionar evento 'notification' no server</p>
+          <p class="text-neutral-400">3. Criar componente NotificationBell</p>
+          <p class="text-neutral-400">4. Integrar no layout principal</p>
+          <p class="text-emerald-400 mt-2">Aprovado? (s/n)</p>
+        </div>
+      </div>
+
+      <!-- Dica prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">⚡</span> Dica Prática</h3>
+        <p class="text-neutral-300">Use Plan Mode para qualquer tarefa que afete mais de 2 arquivos ou envolva mudanças arquiteturais. Para tarefas simples como corrigir um typo, o mode normal é suficiente. A regra: se você ficaria surpreso com uma escolha errada do Claude, ative o Plan Mode primeiro.</p>
+      </div>
+
+      <!-- Fazer vs Não fazer -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ O que FAZER</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Use Plan Mode para features que impactam múltiplos arquivos</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Responda todas as perguntas de esclarecimento do Claude antes de aprovar</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Revise o plano completo antes de aprovar a execução</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Peça para o Claude ajustar o plano se algo não estiver certo</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ O que NÃO fazer</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Deixar o Claude executar mudanças grandes sem plan mode</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Aprovar o plano sem ler cada etapa proposta</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Ignorar perguntas de esclarecimento — elas existem por razão</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Usar plan mode para micro-tarefas que não precisam de validação</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- HACK 8: Dev Júnior -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">8</span>
+        <h2 class="text-2xl font-bold">👨‍💻 Hack 8 — Dev Júnior</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Há uma diferença fundamental entre dar um comando e apresentar um problema. Quando você trata o Claude como um <strong class="text-emerald-400">dev júnior inteligente</strong> — descrevendo o problema, o contexto de negócio e o objetivo — e deixa ele raciocinar sobre a solução, a qualidade do output aumenta visivelmente. O Claude explicita suas suposições e você pode corrigi-las antes da implementação.
+      </p>
+
+      <!-- Conceito principal -->
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-4 flex items-center"><span class="mr-2">💡</span> Por que apresentar problemas funciona melhor</h3>
+        <p class="text-neutral-300 mb-4">Quando você descreve um problema em vez de dar um comando:</p>
+        <ul class="space-y-2 text-neutral-300">
+          <li class="flex items-start space-x-2"><span class="text-emerald-400 mt-1">•</span><span>O Claude considera <strong class="text-white">múltiplas abordagens</strong> antes de escolher uma</span></li>
+          <li class="flex items-start space-x-2"><span class="text-emerald-400 mt-1">•</span><span>Ele <strong class="text-white">explicita as suposições</strong> que está fazendo — você pode corrigi-las antes do código</span></li>
+          <li class="flex items-start space-x-2"><span class="text-emerald-400 mt-1">•</span><span>Considera <strong class="text-white">edge cases e implicações</strong> que um comando direto ignora</span></li>
+          <li class="flex items-start space-x-2"><span class="text-emerald-400 mt-1">•</span><span>Produz uma solução <strong class="text-white">adequada ao contexto</strong> do negócio, não genérica</span></li>
+        </ul>
+      </div>
+
+      <!-- Exemplo de terminal -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4 flex items-center"><span class="mr-2">💻</span> Comando vs Problema — Comparação</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p class="text-red-400 text-sm font-semibold mb-2">✗ Comando direto (resultado mediano)</p>
+            <div class="bg-dark-900 rounded-lg p-3 font-mono text-sm text-neutral-400">
+              <p>"Escreva uma função que</p>
+              <p>rastreie o crescimento de</p>
+              <p>usuários mensalmente."</p>
+            </div>
+          </div>
+          <div>
+            <p class="text-emerald-400 text-sm font-semibold mb-2">✓ Apresentação do problema (resultado superior)</p>
+            <div class="bg-dark-900 rounded-lg p-3 font-mono text-sm text-neutral-400">
+              <p>"Precisamos entender</p>
+              <p>por que o crescimento</p>
+              <p>desacelerou no Q3.</p>
+              <p>Como você abordaria</p>
+              <p>o rastreamento disso?"</p>
+            </div>
+          </div>
+        </div>
+        <div class="mt-4 bg-dark-900 rounded-lg p-3 font-mono text-sm">
+          <p class="text-emerald-400 text-xs mb-2">// Claude responde ao problema:</p>
+          <p class="text-neutral-300 text-sm">"Para analisar desaceleração de crescimento no Q3,</p>
+          <p class="text-neutral-300 text-sm">sugiro rastrear: novos usuários/semana, churn rate,</p>
+          <p class="text-neutral-300 text-sm">retenção D7/D30, e atribuição por canal de aquisição.</p>
+          <p class="text-neutral-300 text-sm">Assumindo PostgreSQL como banco — correto?"</p>
+        </div>
+      </div>
+
+      <!-- Dica prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">⚡</span> Dica Prática</h3>
+        <p class="text-neutral-300">Comece mensagens com "Como devemos..." ou "Qual seria a melhor abordagem para..." em vez de "Escreva...", "Crie..." ou "Faça...". Essa simples mudança de enquadramento ativa o modo de raciocínio colaborativo do Claude ao invés do modo de execução direta.</p>
+      </div>
+
+      <!-- Fazer vs Não fazer -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ O que FAZER</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Descreva o problema de negócio, não a solução técnica desejada</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Dê contexto sobre por que a funcionalidade é necessária</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Valide as suposições que o Claude explicitar antes de prosseguir</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Peça ao Claude para "pensar em voz alta" sobre trade-offs</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ O que NÃO fazer</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Especificar a implementação antes de descrever o problema</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Ignorar as suposições que o Claude coloca — são pistas de ambiguidade</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Forçar uma solução específica quando o Claude sugere alternativa melhor</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Omitir contexto de negócio pensando que só o contexto técnico importa</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- HACK 9: Faça Perguntas -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">9</span>
+        <h2 class="text-2xl font-bold">❓ Hack 9 — Faça Perguntas</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        O Claude tende a fazer suposições e avançar quando encontra ambiguidade. Esse comportamento padrão gera retrabalho. A solução é explícita: instrua o Claude a <strong class="text-emerald-400">fazer perguntas continuamente até estar 95% confiante</strong> de que entendeu exatamente o que precisa ser feito. Cinco minutos de alinhamento evitam uma hora de revisão.
+      </p>
+
+      <!-- Conceito principal -->
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-4 flex items-center"><span class="mr-2">💡</span> A instrução do 95%</h3>
+        <p class="text-neutral-300 mb-4">Existem três formas de aplicar essa instrução:</p>
+        <div class="space-y-4">
+          <div class="bg-dark-900/50 rounded-lg p-4">
+            <h4 class="text-emerald-400 font-semibold text-sm mb-1">Por sessão (ad-hoc)</h4>
+            <p class="text-neutral-300 text-sm font-mono bg-dark-900 p-2 rounded mt-1">"Antes de começar, faça perguntas até estar 95% confiante que entende o que preciso."</p>
+          </div>
+          <div class="bg-dark-900/50 rounded-lg p-4">
+            <h4 class="text-emerald-400 font-semibold text-sm mb-1">No CLAUDE.md (permanente)</h4>
+            <p class="text-neutral-300 text-sm">Adicione ao CLAUDE.md: <code class="bg-dark-900 px-1 rounded">Sempre faça perguntas de esclarecimento antes de implementar qualquer feature até estar 95% confiante.</code></p>
+          </div>
+          <div class="bg-dark-900/50 rounded-lg p-4">
+            <h4 class="text-emerald-400 font-semibold text-sm mb-1">Por tarefa específica</h4>
+            <p class="text-neutral-300 text-sm font-mono bg-dark-900 p-2 rounded mt-1">"Antes de refatorar o sistema de auth, me faça todas as perguntas necessárias."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alerta importante -->
+      <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-red-400 mb-3 flex items-center"><span class="mr-2">⚠️</span> Atenção</h3>
+        <p class="text-neutral-300">Se o Claude começa a implementar sem perguntar sobre pontos ambíguos, interrompa e diga: "Espere — que suposições você está fazendo? Tem alguma dúvida antes de continuar?" Cultivar esse hábito de perguntar é mais eficiente do que corrigir implementações erradas depois.</p>
+      </div>
+
+      <!-- Dica prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">⚡</span> Dica Prática</h3>
+        <p class="text-neutral-300">Inclua no CLAUDE.md do projeto a instrução permanente de perguntar antes de agir. Assim, ela se aplica a todas as sessões automaticamente sem precisar redigitar. Combine com o Plan Mode (Hack 7) para projetos complexos — os dois trabalham em sinergia perfeita.</p>
+      </div>
+
+      <!-- Fazer vs Não fazer -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ O que FAZER</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Instrua o Claude explicitamente a perguntar antes de implementar</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Adicione a instrução de 95% de confiança no CLAUDE.md</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Responda as perguntas com detalhes suficientes para eliminar ambiguidade</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ O que NÃO fazer</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Deixar o Claude avançar quando há ambiguidades óbvias no pedido</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Responder as perguntas com "você que sabe" — seja específico</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Achar que perguntas iniciais custam tempo — elas economizam muito mais</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- HACK 10: Autoverificação -->
+    <section id="topico-4" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">10</span>
+        <h2 class="text-2xl font-bold">✅ Hack 10 — Autoverificação</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        O Claude, por padrão, avança na lista de tarefas sem verificar se o item anterior funcionou corretamente. Isso cria um efeito cascata: quando uma tarefa falha silenciosamente, as seguintes constroem sobre uma base quebrada. A <strong class="text-emerald-400">autoverificação</strong> é o protocolo que quebra esse ciclo — verificação explícita em cada etapa antes de avançar.
+      </p>
+
+      <!-- Conceito principal -->
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-4 flex items-center"><span class="mr-2">💡</span> O protocolo de autoverificação</h3>
+        <p class="text-neutral-300 mb-4">Para cada tarefa na lista, o Claude deve seguir esta sequência antes de avançar:</p>
+        <div class="space-y-3">
+          <div class="flex items-center space-x-3 bg-dark-900/50 rounded-lg p-3">
+            <span class="text-emerald-400 font-bold w-8 text-center">1</span>
+            <div>
+              <span class="text-white font-medium">Construir</span>
+              <span class="text-neutral-400 text-sm ml-2">— implementar a tarefa</span>
+            </div>
+          </div>
+          <div class="flex items-center space-x-3 bg-dark-900/50 rounded-lg p-3">
+            <span class="text-emerald-400 font-bold w-8 text-center">2</span>
+            <div>
+              <span class="text-white font-medium">Screenshot</span>
+              <span class="text-neutral-400 text-sm ml-2">— capturar e verificar visualmente o resultado</span>
+            </div>
+          </div>
+          <div class="flex items-center space-x-3 bg-dark-900/50 rounded-lg p-3">
+            <span class="text-emerald-400 font-bold w-8 text-center">3</span>
+            <div>
+              <span class="text-white font-medium">DevTools</span>
+              <span class="text-neutral-400 text-sm ml-2">— abrir e confirmar ausência de erros no console</span>
+            </div>
+          </div>
+          <div class="flex items-center space-x-3 bg-dark-900/50 rounded-lg p-3">
+            <span class="text-emerald-400 font-bold w-8 text-center">4</span>
+            <div>
+              <span class="text-white font-medium">Confirmar 95%</span>
+              <span class="text-neutral-400 text-sm ml-2">— só avança quando está 95% confiante que a tarefa está correta</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exemplo de lista de tarefas -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4 flex items-center"><span class="mr-2">💻</span> Lista de tarefas com autoverificação</h3>
+        <div class="bg-dark-900 rounded-lg p-4 font-mono text-sm">
+          <p class="text-neutral-500"># Instrução para o Claude:</p>
+          <p class="text-neutral-300 mt-1">"Execute estas tarefas em ordem.</p>
+          <p class="text-neutral-300">Após cada uma: tire screenshot, verifique</p>
+          <p class="text-neutral-300">o console sem erros, e só avance quando</p>
+          <p class="text-neutral-300">estiver 95% confiante que está correto.</p>
+          <p class="text-neutral-500 mt-2"># Tarefas:</p>
+          <p class="text-neutral-300">[ ] 1. Criar componente LoginForm</p>
+          <p class="text-neutral-300">[ ] 2. Adicionar validação de campos</p>
+          <p class="text-neutral-300">[ ] 3. Integrar com endpoint /auth/login</p>
+          <p class="text-neutral-300">[ ] 4. Adicionar feedback de erro ao usuário"</p>
+          <p class="text-neutral-500 mt-2"># Claude marca cada item ao verificar:</p>
+          <p class="text-emerald-400">[✓] 1. LoginForm criado — screenshot OK, sem erros</p>
+          <p class="text-emerald-400">[✓] 2. Validação adicionada — campos testados manualmente</p>
+          <p class="text-yellow-400">[…] 3. Integrando endpoint... (em progresso)</p>
+        </div>
+      </div>
+
+      <!-- Dica prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">⚡</span> Dica Prática</h3>
+        <p class="text-neutral-300">Combine autoverificação com o Plan Mode. No Plan Mode, o Claude cria a lista de tarefas com suas etapas de verificação incluídas. Quando você aprova e ele executa, cada tarefa já vem com o checkpoint de verificação embutido. Essa combinação é o fluxo mais robusto e confiável possível.</p>
+      </div>
+
+      <!-- Fazer vs Não fazer -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ O que FAZER</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Inclua etapas de verificação explícitas em toda lista de tarefas</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Instrua o Claude a usar screenshot + DevTools em cada etapa</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Defina o threshold de 95% de confiança explicitamente</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Combine com Plan Mode para a sequência mais robusta possível</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ O que NÃO fazer</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Deixar o Claude avançar para a próxima tarefa sem verificar a atual</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Assumir que "se compilou, funcionou" — erros visuais e lógicos não são compilação</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Revisar o resultado apenas no final de uma lista longa de tarefas</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Ignorar erros no console do DevTools por parecerem menores</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESUMO DO MODULO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-emerald-900/40 via-dark-800 to-dark-800 rounded-xl border border-emerald-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center">
+          <span class="mr-3">🎯</span> Resumo do Módulo 1.3
+        </h2>
+
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Hack 7 — Plan Mode:</strong>
+              <span class="text-neutral-400"> Shift+Tab ativa o modo de planejamento — o Claude pesquisa, pergunta e propõe o plano para sua aprovação antes de qualquer execução</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Hack 8 — Dev Júnior:</strong>
+              <span class="text-neutral-400"> Apresente problemas, não comandos — o Claude raciocina melhor quando precisa chegar à solução por conta própria</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Hack 9 — Faça Perguntas:</strong>
+              <span class="text-neutral-400"> Instrua o Claude a perguntar até ter 95% de confiança — 5 minutos de alinhamento economizam horas de revisão</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Hack 10 — Autoverificação:</strong>
+              <span class="text-neutral-400"> Sequência construir → screenshot → DevTools → confirmar 95% antes de cada próxima tarefa elimina o efeito cascata de erros</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Conquista da Trilha -->
+        <div class="bg-emerald-900/30 rounded-lg p-5 mb-8 border border-emerald-500/30">
+          <h3 class="font-semibold text-emerald-400 mb-2 flex items-center"><span class="mr-2">🏆</span> Trilha 1 Concluída!</h3>
+          <p class="text-neutral-300 text-sm">Você dominou os 10 hacks fundamentais do Claude Code. Agora tem a base para configurar qualquer projeto, gerenciar contexto eficientemente e trabalhar com um fluxo que elimina retrabalho. Pronto para o nível intermediário?</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="modulo-1-2.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">
+            ← Módulo Anterior: Contexto
+          </a>
+          <a href="../trilha2/index.html" class="flex-1 text-center px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-500 transition-colors">
+            Próxima Trilha: Intermediário →
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-dark-600 py-8 mt-4">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>32 Hacks do Claude Code · <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> · 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) {
+      themeToggleDarkIcon.classList.remove('hidden');
+      html.classList.remove('dark');
+    } else {
+      themeToggleLightIcon.classList.remove('hidden');
+    }
+    themeToggle.addEventListener('click', () => {
+      themeToggleDarkIcon.classList.toggle('hidden');
+      themeToggleLightIcon.classList.toggle('hidden');
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>32 Hacks do Claude Code | Do Iniciante ao Power User</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FACC15',
+            dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+
+    /* Light mode overrides - OBRIGATORIO */
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    /* Light mode - todas as cores de trilha (landing usa todas) */
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+    html:not(.dark) .bg-emerald-500\/10 { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+    html:not(.dark) .hover\:text-emerald-400:hover { color: #059669; }
+    html:not(.dark) .hover\:bg-emerald-500\/10:hover { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-emerald-400 { color: #059669; }
+    html:not(.dark) .hover\:border-emerald-500\/50:hover { border-color: rgba(5, 150, 105, 0.4); }
+
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+    html:not(.dark) .bg-blue-500\/10 { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+    html:not(.dark) .hover\:text-blue-400:hover { color: #2563eb; }
+    html:not(.dark) .hover\:bg-blue-500\/10:hover { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-blue-400 { color: #2563eb; }
+    html:not(.dark) .hover\:border-blue-500\/50:hover { border-color: rgba(37, 99, 235, 0.4); }
+
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .bg-purple-500\/20 { background-color: rgba(124, 58, 237, 0.12); }
+    html:not(.dark) .bg-purple-500\/10 { background-color: rgba(124, 58, 237, 0.08); }
+    html:not(.dark) .border-purple-500\/30 { border-color: rgba(124, 58, 237, 0.25); }
+    html:not(.dark) .hover\:text-purple-400:hover { color: #7c3aed; }
+    html:not(.dark) .hover\:bg-purple-500\/10:hover { background-color: rgba(124, 58, 237, 0.08); }
+    html:not(.dark) .group:hover .group-hover\:text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .hover\:border-purple-500\/50:hover { border-color: rgba(124, 58, 237, 0.4); }
+
+    /* Light mode - remove gradientes */
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+
+    /* Light mode - cores especiais */
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+
+    /* Light mode - nav */
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+
+    /* Hero image overlay */
+    .hero-overlay {
+      background: linear-gradient(to right, rgba(17,24,39,0.92) 40%, rgba(17,24,39,0.6) 70%, rgba(17,24,39,0.3) 100%);
+    }
+    html:not(.dark) .hero-overlay {
+      background: linear-gradient(to right, rgba(248,250,252,0.95) 40%, rgba(248,250,252,0.75) 70%, rgba(248,250,252,0.4) 100%);
+    }
+
+    /* Hack number badges */
+    .hack-badge {
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Smooth hover on trilha cards */
+    .trilha-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .trilha-card:hover {
+      transform: translateY(-2px);
+    }
+
+    /* 32 hacks grid cards — glass + colored glow */
+    .hack-card {
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .hack-card:hover {
+      transform: translateY(-3px);
+    }
+    .hack-card-emerald {
+      box-shadow: 0 4px 24px -4px rgba(16, 185, 129, 0.18), 0 2px 8px -2px rgba(0,0,0,0.4);
+    }
+    .hack-card-emerald:hover {
+      box-shadow: 0 8px 32px -4px rgba(16, 185, 129, 0.32), 0 2px 8px -2px rgba(0,0,0,0.4);
+    }
+    .hack-card-blue {
+      box-shadow: 0 4px 24px -4px rgba(59, 130, 246, 0.18), 0 2px 8px -2px rgba(0,0,0,0.4);
+    }
+    .hack-card-blue:hover {
+      box-shadow: 0 8px 32px -4px rgba(59, 130, 246, 0.32), 0 2px 8px -2px rgba(0,0,0,0.4);
+    }
+    .hack-card-purple {
+      box-shadow: 0 4px 24px -4px rgba(139, 92, 246, 0.18), 0 2px 8px -2px rgba(0,0,0,0.4);
+    }
+    .hack-card-purple:hover {
+      box-shadow: 0 8px 32px -4px rgba(139, 92, 246, 0.32), 0 2px 8px -2px rgba(0,0,0,0.4);
+    }
+    html:not(.dark) .hack-card-emerald {
+      box-shadow: 0 4px 20px -4px rgba(5, 150, 105, 0.20), 0 2px 6px -2px rgba(0,0,0,0.08);
+    }
+    html:not(.dark) .hack-card-blue {
+      box-shadow: 0 4px 20px -4px rgba(37, 99, 235, 0.20), 0 2px 6px -2px rgba(0,0,0,0.08);
+    }
+    html:not(.dark) .hack-card-purple {
+      box-shadow: 0 4px 20px -4px rgba(124, 58, 237, 0.20), 0 2px 6px -2px rgba(0,0,0,0.08);
+    }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAVIGATION -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">⚡</span>
+            <span class="font-bold text-lg hidden sm:inline">32 Hacks do Claude Code</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="curso/trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+            <span class="sm:hidden">T1</span><span class="hidden sm:inline">Iniciante</span>
+          </a>
+          <a href="curso/trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+            <span class="sm:hidden">T2</span><span class="hidden sm:inline">Intermediário</span>
+          </a>
+          <a href="curso/trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors">
+            <span class="sm:hidden">T3</span><span class="hidden sm:inline">Avançado</span>
+          </a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+            </svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION — imagem alinhada ao container das trilhas -->
+  <section class="py-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <img src="doc/hero-scifi-2.png" alt="32 Hacks do Claude Code" class="w-full h-auto block rounded-2xl">
+    </div>
+  </section>
+
+  <!-- CARD DE APRESENTAÇÃO — abaixo da imagem, acima de O que vai aprender -->
+  <div class="py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
+      <div class="w-full max-w-2xl bg-dark-800 rounded-2xl p-8 border border-white/20 shadow-2xl ring-1 ring-white/10">
+        <div class="flex items-center space-x-2 mb-6">
+          <span class="inline-flex items-center px-3 py-1 bg-primary/10 border border-primary/40 text-primary text-xs font-bold rounded-full uppercase tracking-wider">
+            ⚡ Curso Completo Gratuito
+          </span>
+        </div>
+
+        <h1 class="text-5xl sm:text-6xl font-bold mb-4 leading-tight">
+          <span class="text-primary">32 Hacks</span><br>
+          <span class="text-neutral-100">do Claude Code</span>
+        </h1>
+
+        <p class="text-xl text-neutral-300 mb-8 leading-relaxed">
+          Do Iniciante ao Power User — domine as técnicas que multiplicam sua produtividade com IA.
+        </p>
+
+        <!-- Stats bar -->
+        <div class="flex flex-wrap gap-6 mb-10 text-sm">
+          <div class="flex items-center space-x-2">
+            <span class="text-2xl font-bold text-primary">32</span>
+            <span class="text-neutral-400">hacks práticos</span>
+          </div>
+          <div class="w-px bg-dark-600 hidden sm:block"></div>
+          <div class="flex items-center space-x-2">
+            <span class="text-2xl font-bold text-emerald-400">3</span>
+            <span class="text-neutral-400">trilhas</span>
+          </div>
+          <div class="w-px bg-dark-600 hidden sm:block"></div>
+          <div class="flex items-center space-x-2">
+            <span class="text-2xl font-bold text-blue-400">11</span>
+            <span class="text-neutral-400">módulos</span>
+          </div>
+          <div class="w-px bg-dark-600 hidden sm:block"></div>
+          <div class="flex items-center space-x-2">
+            <span class="text-2xl font-bold text-purple-400">100%</span>
+            <span class="text-neutral-400">gratuito</span>
+          </div>
+        </div>
+
+        <!-- CTA buttons -->
+        <div class="flex flex-wrap gap-4">
+          <a href="curso/trilha1/index.html" class="inline-flex items-center px-8 py-4 bg-primary text-dark-900 font-bold text-lg rounded-xl hover:bg-yellow-300 transition-colors shadow-lg">
+            Começar Agora →
+          </a>
+          <a href="#trilhas" class="inline-flex items-center px-8 py-4 bg-dark-700 text-neutral-300 font-semibold text-lg rounded-xl hover:bg-dark-600 transition-colors border border-dark-600">
+            Ver Trilhas
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- O QUE VOCE VAI APRENDER — 3 Trilhas -->
+  <section id="trilhas" class="py-20 border-t border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold mb-3">O que você vai aprender</h2>
+        <p class="text-neutral-400 text-lg max-w-2xl mx-auto">Três trilhas progressivas, do primeiro comando ao trabalho com equipes de agentes autônomos.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- Trilha 1 - Iniciante (Emerald) -->
+        <a href="curso/trilha1/index.html" class="trilha-card group block bg-dark-800 rounded-2xl border border-dark-600 hover:border-emerald-500/50 overflow-hidden">
+          <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 p-6 border-b border-dark-600">
+            <div class="flex items-center justify-between mb-3">
+              <span class="inline-flex items-center px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-bold rounded-full border border-emerald-500/30">
+                TRILHA 1
+              </span>
+              <span class="text-2xl">🌱</span>
+            </div>
+            <h3 class="text-xl font-bold mb-1 group-hover:text-emerald-400 transition-colors">Iniciante</h3>
+            <p class="text-neutral-400 text-sm">Fundamentos que todo usuário do Claude Code precisa dominar.</p>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center justify-between text-sm mb-4">
+              <span class="text-emerald-400 font-semibold">10 hacks</span>
+              <span class="text-neutral-500">3 módulos</span>
+            </div>
+            <ul class="space-y-2 text-sm text-neutral-400">
+              <li class="flex items-start space-x-2">
+                <span class="text-emerald-400 mt-0.5 flex-shrink-0">•</span>
+                <span>Inicializar projetos com <code class="text-emerald-400 bg-dark-700 px-1 rounded">/init</code> e CLAUDE.md</span>
+              </li>
+              <li class="flex items-start space-x-2">
+                <span class="text-emerald-400 mt-0.5 flex-shrink-0">•</span>
+                <span>Statusline e configuração do ambiente</span>
+              </li>
+              <li class="flex items-start space-x-2">
+                <span class="text-emerald-400 mt-0.5 flex-shrink-0">•</span>
+                <span>Gerenciar contexto e janela de tokens</span>
+              </li>
+              <li class="flex items-start space-x-2">
+                <span class="text-emerald-400 mt-0.5 flex-shrink-0">•</span>
+                <span>Plan mode: planejar antes de executar</span>
+              </li>
+            </ul>
+            <div class="mt-6 flex items-center text-emerald-400 text-sm font-semibold group-hover:gap-2 transition-all">
+              <span>Começar Trilha 1</span>
+              <span class="ml-1">→</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Trilha 2 - Intermediário (Blue) -->
+        <a href="curso/trilha2/index.html" class="trilha-card group block bg-dark-800 rounded-2xl border border-dark-600 hover:border-blue-500/50 overflow-hidden">
+          <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 p-6 border-b border-dark-600">
+            <div class="flex items-center justify-between mb-3">
+              <span class="inline-flex items-center px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full border border-blue-500/30">
+                TRILHA 2
+              </span>
+              <span class="text-2xl">⚡</span>
+            </div>
+            <h3 class="text-xl font-bold mb-1 group-hover:text-blue-400 transition-colors">Intermediário</h3>
+            <p class="text-neutral-400 text-sm">Automatize fluxos e expanda as capacidades do Claude Code.</p>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center justify-between text-sm mb-4">
+              <span class="text-blue-400 font-semibold">12 hacks</span>
+              <span class="text-neutral-500">4 módulos</span>
+            </div>
+            <ul class="space-y-2 text-sm text-neutral-400">
+              <li class="flex items-start space-x-2">
+                <span class="text-blue-400 mt-0.5 flex-shrink-0">•</span>
+                <span>Subagentes e tarefas paralelas</span>
+              </li>
+              <li class="flex items-start space-x-2">
+                <span class="text-blue-400 mt-0.5 flex-shrink-0">•</span>
+                <span>Skills (slash commands) customizados</span>
+              </li>
+              <li class="flex items-start space-x-2">
+                <span class="text-blue-400 mt-0.5 flex-shrink-0">•</span>
+                <span>Hooks para automação de fluxos</span>
+              </li>
+              <li class="flex items-start space-x-2">
+                <span class="text-blue-400 mt-0.5 flex-shrink-0">•</span>
+                <span>Screenshots e contexto visual</span>
+              </li>
+            </ul>
+            <div class="mt-6 flex items-center text-blue-400 text-sm font-semibold">
+              <span>Começar Trilha 2</span>
+              <span class="ml-1">→</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Trilha 3 - Avançado (Purple) -->
+        <a href="curso/trilha3/index.html" class="trilha-card group block bg-dark-800 rounded-2xl border border-dark-600 hover:border-purple-500/50 overflow-hidden">
+          <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 p-6 border-b border-dark-600">
+            <div class="flex items-center justify-between mb-3">
+              <span class="inline-flex items-center px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-bold rounded-full border border-purple-500/30">
+                TRILHA 3
+              </span>
+              <span class="text-2xl">🚀</span>
+            </div>
+            <h3 class="text-xl font-bold mb-1 group-hover:text-purple-400 transition-colors">Avançado</h3>
+            <p class="text-neutral-400 text-sm">Técnicas de power user: fluxos complexos e equipes de agentes.</p>
+          </div>
+          <div class="p-6">
+            <div class="flex items-center justify-between text-sm mb-4">
+              <span class="text-purple-400 font-semibold">10 hacks</span>
+              <span class="text-neutral-500">4 módulos</span>
+            </div>
+            <ul class="space-y-2 text-sm text-neutral-400">
+              <li class="flex items-start space-x-2">
+                <span class="text-purple-400 mt-0.5 flex-shrink-0">•</span>
+                <span>Git worktrees para trabalho paralelo</span>
+              </li>
+              <li class="flex items-start space-x-2">
+                <span class="text-purple-400 mt-0.5 flex-shrink-0">•</span>
+                <span>Ultrathink para raciocínio profundo</span>
+              </li>
+              <li class="flex items-start space-x-2">
+                <span class="text-purple-400 mt-0.5 flex-shrink-0">•</span>
+                <span>Equipes de agentes autônomos</span>
+              </li>
+              <li class="flex items-start space-x-2">
+                <span class="text-purple-400 mt-0.5 flex-shrink-0">•</span>
+                <span>Orquestração de fluxos complexos</span>
+              </li>
+            </ul>
+            <div class="mt-6 flex items-center text-purple-400 text-sm font-semibold">
+              <span>Começar Trilha 3</span>
+              <span class="ml-1">→</span>
+            </div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PRINCIPIOS-CHAVE -->
+  <section class="py-20 bg-dark-800 border-t border-dark-600 border-b">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold mb-3">Princípios-Chave</h2>
+        <p class="text-neutral-400 text-lg max-w-2xl mx-auto">Os fundamentos que guiam cada hack deste curso — aprenda a pensar como um power user.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+        <div class="bg-dark-700 rounded-xl border border-dark-600 p-6">
+          <div class="flex items-start space-x-4">
+            <span class="text-3xl flex-shrink-0">🎯</span>
+            <div>
+              <h3 class="text-lg font-bold mb-2 text-primary">Contexto é seu recurso mais escasso</h3>
+              <p class="text-neutral-400 text-sm leading-relaxed">A janela de contexto do Claude é finita. Cada token gasto em ruído é um token a menos para o que importa. Aprenda a curar, comprimir e priorizar informações para maximizar resultados.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-700 rounded-xl border border-dark-600 p-6">
+          <div class="flex items-start space-x-4">
+            <span class="text-3xl flex-shrink-0">📋</span>
+            <div>
+              <h3 class="text-lg font-bold mb-2 text-primary">Planeje antes de executar</h3>
+              <p class="text-neutral-400 text-sm leading-relaxed">Deixar o Claude agir sem planejamento gera retrabalho. O plan mode força reflexão antecipada — problemas identificados na fase de planejamento custam zero para corrigir.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-700 rounded-xl border border-dark-600 p-6">
+          <div class="flex items-start space-x-4">
+            <span class="text-3xl flex-shrink-0">🤝</span>
+            <div>
+              <h3 class="text-lg font-bold mb-2 text-primary">Trate o Claude como colega de equipe</h3>
+              <p class="text-neutral-400 text-sm leading-relaxed">Não é uma ferramenta — é um colaborador. Compartilhe contexto, explique objetivos, dê feedback claro. Quanto mais você trata como parceiro, melhores os resultados.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-700 rounded-xl border border-dark-600 p-6">
+          <div class="flex items-start space-x-4">
+            <span class="text-3xl flex-shrink-0">📝</span>
+            <div>
+              <h3 class="text-lg font-bold mb-2 text-primary">Capture aprendizados no claude.md</h3>
+              <p class="text-neutral-400 text-sm leading-relaxed">O CLAUDE.md é a memória persistente do seu projeto. Cada decisão importante, padrão adotado e lição aprendida deve ser registrada ali — para você e para o Claude.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- IMAGEM HAND-DRAWN + TEASER -->
+  <section class="py-20 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col lg:flex-row items-center gap-12">
+
+        <!-- Imagem hand-drawn -->
+        <div class="flex-shrink-0 w-full lg:w-auto">
+          <div class="relative inline-block">
+            <div class="absolute -inset-1 bg-gradient-to-br from-emerald-500/20 via-blue-500/20 to-purple-500/20 rounded-2xl blur-sm"></div>
+            <img src="doc/hero-handdrawn.png" alt="O que você vai dominar" class="relative rounded-2xl border border-dark-600 max-w-sm w-full mx-auto shadow-2xl">
+          </div>
+        </div>
+
+        <!-- Texto -->
+        <div class="flex-1">
+          <span class="inline-flex items-center px-3 py-1 bg-primary/10 border border-primary/40 text-primary text-xs font-bold rounded-full mb-4">
+            O QUE VOCE VAI DOMINAR
+          </span>
+          <h2 class="text-3xl font-bold mb-6">Da teoria à prática em cada hack</h2>
+
+          <div class="space-y-4">
+            <div class="flex items-start space-x-3">
+              <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">✓</span>
+              <div>
+                <span class="font-semibold text-emerald-400">Configuração profissional do ambiente</span>
+                <p class="text-neutral-400 text-sm mt-0.5">CLAUDE.md, statusline, permissões e atalhos que economizam horas por semana.</p>
+              </div>
+            </div>
+            <div class="flex items-start space-x-3">
+              <span class="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">✓</span>
+              <div>
+                <span class="font-semibold text-blue-400">Automação com hooks e skills</span>
+                <p class="text-neutral-400 text-sm mt-0.5">Crie comandos customizados e automatize tarefas repetitivas sem esforço manual.</p>
+              </div>
+            </div>
+            <div class="flex items-start space-x-3">
+              <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">✓</span>
+              <div>
+                <span class="font-semibold text-purple-400">Equipes de agentes trabalhando em paralelo</span>
+                <p class="text-neutral-400 text-sm mt-0.5">Orquestre múltiplos agentes para tarefas complexas — o futuro do desenvolvimento.</p>
+              </div>
+            </div>
+            <div class="flex items-start space-x-3">
+              <span class="w-6 h-6 rounded-full bg-primary/20 text-primary text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">✓</span>
+              <div>
+                <span class="font-semibold text-primary">Raciocínio profundo com ultrathink</span>
+                <p class="text-neutral-400 text-sm mt-0.5">Ative o modo de pensamento estendido para resolver problemas que exigem mais reflexão.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-8">
+            <a href="curso/trilha1/index.html" class="inline-flex items-center px-6 py-3 bg-primary text-dark-900 font-bold rounded-xl hover:bg-yellow-300 transition-colors">
+              Começar pela Trilha 1 →
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- OS 32 HACKS — Visual Grid -->
+  <section class="py-20 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-dark-800/60 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xl ring-1 ring-white/5 p-8 sm:p-10">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold mb-3">Os 32 Hacks</h2>
+        <p class="text-neutral-400 text-lg max-w-2xl mx-auto">Referência rápida de todos os hacks, organizados por trilha e módulo.</p>
+      </div>
+
+      <!-- Trilha 1 -->
+      <div class="mb-10">
+        <div class="flex items-center space-x-3 mb-5">
+          <span class="inline-flex items-center px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-bold rounded-full border border-emerald-500/30">
+            TRILHA 1 — INICIANTE
+          </span>
+          <span class="text-neutral-500 text-sm">10 hacks · 3 módulos</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+
+          <!-- Modulo 1.1 -->
+          <div class="hack-card hack-card-emerald bg-dark-800 rounded-xl border border-emerald-500/20 p-4 cursor-pointer" title="Duplo clique para abrir módulo" ondblclick="window.location='curso/trilha1/modulo-1-1.html'">
+            <div class="text-xs text-emerald-400 font-bold mb-3 uppercase tracking-wider">Módulo 1.1 — Setup Inicial</div>
+            <div class="space-y-2">
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold flex items-center justify-center flex-shrink-0">1</span>
+                <span class="text-sm text-neutral-300">/init — Inicializar projetos</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold flex items-center justify-center flex-shrink-0">2</span>
+                <span class="text-sm text-neutral-300">CLAUDE.md — Memória do projeto</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold flex items-center justify-center flex-shrink-0">3</span>
+                <span class="text-sm text-neutral-300">Statusline — Visibilidade em tempo real</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold flex items-center justify-center flex-shrink-0">4</span>
+                <span class="text-sm text-neutral-300">Permissões — Configurar acessos</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modulo 1.2 -->
+          <div class="hack-card hack-card-emerald bg-dark-800 rounded-xl border border-emerald-500/20 p-4 cursor-pointer" title="Duplo clique para abrir módulo" ondblclick="window.location='curso/trilha1/modulo-1-2.html'">
+            <div class="text-xs text-emerald-400 font-bold mb-3 uppercase tracking-wider">Módulo 1.2 — Contexto</div>
+            <div class="space-y-2">
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold flex items-center justify-center flex-shrink-0">5</span>
+                <span class="text-sm text-neutral-300">Janela de contexto — Gerenciar tokens</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold flex items-center justify-center flex-shrink-0">6</span>
+                <span class="text-sm text-neutral-300">Compactar contexto — /compact</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold flex items-center justify-center flex-shrink-0">7</span>
+                <span class="text-sm text-neutral-300">Docs como contexto — Injetar referências</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modulo 1.3 -->
+          <div class="hack-card hack-card-emerald bg-dark-800 rounded-xl border border-emerald-500/20 p-4 cursor-pointer" title="Duplo clique para abrir módulo" ondblclick="window.location='curso/trilha1/modulo-1-3.html'">
+            <div class="text-xs text-emerald-400 font-bold mb-3 uppercase tracking-wider">Módulo 1.3 — Plan Mode</div>
+            <div class="space-y-2">
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold flex items-center justify-center flex-shrink-0">8</span>
+                <span class="text-sm text-neutral-300">Plan mode — Planejar antes de agir</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold flex items-center justify-center flex-shrink-0">9</span>
+                <span class="text-sm text-neutral-300">TodoWrite — Rastrear tarefas</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold flex items-center justify-center flex-shrink-0">10</span>
+                <span class="text-sm text-neutral-300">Fluxo iterativo — Revisar e ajustar</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Trilha 2 -->
+      <div class="mb-10">
+        <div class="flex items-center space-x-3 mb-5">
+          <span class="inline-flex items-center px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-bold rounded-full border border-blue-500/30">
+            TRILHA 2 — INTERMEDIÁRIO
+          </span>
+          <span class="text-neutral-500 text-sm">12 hacks · 4 módulos</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+
+          <!-- Modulo 2.1 -->
+          <div class="hack-card hack-card-blue bg-dark-800 rounded-xl border border-blue-500/20 p-4 cursor-pointer" title="Duplo clique para abrir módulo" ondblclick="window.location='curso/trilha2/modulo-2-1.html'">
+            <div class="text-xs text-blue-400 font-bold mb-3 uppercase tracking-wider">Módulo 2.1 — Subagentes</div>
+            <div class="space-y-2">
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center flex-shrink-0">11</span>
+                <span class="text-sm text-neutral-300">Task tool — Subagentes</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center flex-shrink-0">12</span>
+                <span class="text-sm text-neutral-300">Paralelismo — Tarefas simultâneas</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center flex-shrink-0">13</span>
+                <span class="text-sm text-neutral-300">Orquestração — Dividir e conquistar</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modulo 2.2 -->
+          <div class="hack-card hack-card-blue bg-dark-800 rounded-xl border border-blue-500/20 p-4 cursor-pointer" title="Duplo clique para abrir módulo" ondblclick="window.location='curso/trilha2/modulo-2-2.html'">
+            <div class="text-xs text-blue-400 font-bold mb-3 uppercase tracking-wider">Módulo 2.2 — Skills</div>
+            <div class="space-y-2">
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center flex-shrink-0">14</span>
+                <span class="text-sm text-neutral-300">Slash commands — Criar skills</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center flex-shrink-0">15</span>
+                <span class="text-sm text-neutral-300">Skills globais vs. projeto</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center flex-shrink-0">16</span>
+                <span class="text-sm text-neutral-300">Namespace — Organizar skills</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modulo 2.3 -->
+          <div class="hack-card hack-card-blue bg-dark-800 rounded-xl border border-blue-500/20 p-4 cursor-pointer" title="Duplo clique para abrir módulo" ondblclick="window.location='curso/trilha2/modulo-2-3.html'">
+            <div class="text-xs text-blue-400 font-bold mb-3 uppercase tracking-wider">Módulo 2.3 — Hooks</div>
+            <div class="space-y-2">
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center flex-shrink-0">17</span>
+                <span class="text-sm text-neutral-300">Hooks de ciclo de vida</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center flex-shrink-0">18</span>
+                <span class="text-sm text-neutral-300">Pre/Post tool hooks</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center flex-shrink-0">19</span>
+                <span class="text-sm text-neutral-300">Automação com bash hooks</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modulo 2.4 -->
+          <div class="hack-card hack-card-blue bg-dark-800 rounded-xl border border-blue-500/20 p-4 cursor-pointer" title="Duplo clique para abrir módulo" ondblclick="window.location='curso/trilha2/modulo-2-4.html'">
+            <div class="text-xs text-blue-400 font-bold mb-3 uppercase tracking-wider">Módulo 2.4 — Visão</div>
+            <div class="space-y-2">
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center flex-shrink-0">20</span>
+                <span class="text-sm text-neutral-300">Screenshots — Contexto visual</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center flex-shrink-0">21</span>
+                <span class="text-sm text-neutral-300">Imagens como entrada</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center flex-shrink-0">22</span>
+                <span class="text-sm text-neutral-300">Feedback visual iterativo</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Trilha 3 -->
+      <div>
+        <div class="flex items-center space-x-3 mb-5">
+          <span class="inline-flex items-center px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-bold rounded-full border border-purple-500/30">
+            TRILHA 3 — AVANÇADO
+          </span>
+          <span class="text-neutral-500 text-sm">10 hacks · 4 módulos</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+
+          <!-- Modulo 3.1 -->
+          <div class="hack-card hack-card-purple bg-dark-800 rounded-xl border border-purple-500/20 p-4 cursor-pointer" title="Duplo clique para abrir módulo" ondblclick="window.location='curso/trilha3/modulo-3-1.html'">
+            <div class="text-xs text-purple-400 font-bold mb-3 uppercase tracking-wider">Módulo 3.1 — Worktrees</div>
+            <div class="space-y-2">
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-xs font-bold flex items-center justify-center flex-shrink-0">23</span>
+                <span class="text-sm text-neutral-300">Git worktrees — Paralelismo real</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-xs font-bold flex items-center justify-center flex-shrink-0">24</span>
+                <span class="text-sm text-neutral-300">Múltiplas sessões isoladas</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-xs font-bold flex items-center justify-center flex-shrink-0">25</span>
+                <span class="text-sm text-neutral-300">Fluxo de review paralelo</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modulo 3.2 -->
+          <div class="hack-card hack-card-purple bg-dark-800 rounded-xl border border-purple-500/20 p-4 cursor-pointer" title="Duplo clique para abrir módulo" ondblclick="window.location='curso/trilha3/modulo-3-2.html'">
+            <div class="text-xs text-purple-400 font-bold mb-3 uppercase tracking-wider">Módulo 3.2 — Ultrathink</div>
+            <div class="space-y-2">
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-xs font-bold flex items-center justify-center flex-shrink-0">26</span>
+                <span class="text-sm text-neutral-300">Ultrathink — Raciocínio estendido</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-xs font-bold flex items-center justify-center flex-shrink-0">27</span>
+                <span class="text-sm text-neutral-300">Quando usar thinking profundo</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modulo 3.3 -->
+          <div class="hack-card hack-card-purple bg-dark-800 rounded-xl border border-purple-500/20 p-4 cursor-pointer" title="Duplo clique para abrir módulo" ondblclick="window.location='curso/trilha3/modulo-3-3.html'">
+            <div class="text-xs text-purple-400 font-bold mb-3 uppercase tracking-wider">Módulo 3.3 — Equipes</div>
+            <div class="space-y-2">
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-xs font-bold flex items-center justify-center flex-shrink-0">28</span>
+                <span class="text-sm text-neutral-300">Arquitetura multi-agente</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-xs font-bold flex items-center justify-center flex-shrink-0">29</span>
+                <span class="text-sm text-neutral-300">Orquestrador + executores</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-xs font-bold flex items-center justify-center flex-shrink-0">30</span>
+                <span class="text-sm text-neutral-300">Comunicação entre agentes</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modulo 3.4 -->
+          <div class="hack-card hack-card-purple bg-dark-800 rounded-xl border border-purple-500/20 p-4 cursor-pointer" title="Duplo clique para abrir módulo" ondblclick="window.location='curso/trilha3/modulo-3-4.html'">
+            <div class="text-xs text-purple-400 font-bold mb-3 uppercase tracking-wider">Módulo 3.4 — Pipeline</div>
+            <div class="space-y-2">
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-xs font-bold flex items-center justify-center flex-shrink-0">31</span>
+                <span class="text-sm text-neutral-300">Pipelines de desenvolvimento</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="hack-badge w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-xs font-bold flex items-center justify-center flex-shrink-0">32</span>
+                <span class="text-sm text-neutral-300">CI/CD com Claude Code</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER CTA -->
+  <section class="py-20 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-gradient-to-br from-dark-800 via-dark-800 to-dark-700 rounded-2xl border border-dark-600 p-10 sm:p-14 text-center relative overflow-hidden">
+        <!-- Decorative color accents -->
+        <div class="absolute top-0 left-0 w-40 h-40 bg-emerald-500/5 rounded-full -translate-x-20 -translate-y-20 pointer-events-none"></div>
+        <div class="absolute top-0 right-0 w-40 h-40 bg-purple-500/5 rounded-full translate-x-20 -translate-y-20 pointer-events-none"></div>
+        <div class="absolute bottom-0 left-1/2 w-60 h-60 bg-blue-500/5 rounded-full -translate-x-1/2 translate-y-20 pointer-events-none"></div>
+
+        <div class="relative z-10">
+          <span class="text-5xl mb-6 block">⚡</span>
+          <h2 class="text-3xl sm:text-4xl font-bold mb-4">Pronto para começar?</h2>
+          <p class="text-neutral-400 text-lg mb-8 max-w-xl mx-auto">
+            Comece pela Trilha Iniciante e avance no seu ritmo. 32 hacks práticos, 100% gratuito, direto ao ponto.
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="curso/trilha1/index.html" class="inline-flex items-center justify-center px-8 py-4 bg-primary text-dark-900 font-bold text-lg rounded-xl hover:bg-yellow-300 transition-colors shadow-lg">
+              Começar pela Trilha 1 — Iniciante →
+            </a>
+          </div>
+
+          <div class="mt-8 flex items-center justify-center gap-8 text-sm text-neutral-500">
+            <span class="flex items-center gap-1.5"><span class="text-emerald-400">●</span> Trilha Iniciante</span>
+            <span class="flex items-center gap-1.5"><span class="text-blue-400">●</span> Trilha Intermediário</span>
+            <span class="flex items-center gap-1.5"><span class="text-purple-400">●</span> Trilha Avançado</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-dark-600 py-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center space-x-3">
+          <span class="text-2xl">⚡</span>
+          <div>
+            <div class="font-bold text-neutral-100">32 Hacks do Claude Code</div>
+            <div class="text-sm text-neutral-500">Do Iniciante ao Power User</div>
+          </div>
+        </div>
+        <div class="flex items-center space-x-2 text-sm text-neutral-500">
+          <span>Um curso</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 font-semibold transition-colors">INEMA.CLUB</a>
+        </div>
+      </div>
+
+      <div class="mt-8 pt-6 border-t border-dark-700 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-neutral-500">
+        <div class="flex items-center gap-6">
+          <a href="curso/trilha1/index.html" class="hover:text-emerald-400 transition-colors">Trilha Iniciante</a>
+          <a href="curso/trilha2/index.html" class="hover:text-blue-400 transition-colors">Trilha Intermediário</a>
+          <a href="curso/trilha3/index.html" class="hover:text-purple-400 transition-colors">Trilha Avançado</a>
+        </div>
+        <span>© 2026 INEMA.CLUB — Todos os direitos reservados</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script>
+    // Theme toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) {
+      themeToggleDarkIcon.classList.remove('hidden');
+      html.classList.remove('dark');
+    } else {
+      themeToggleLightIcon.classList.remove('hidden');
+    }
+
+    themeToggle.addEventListener('click', () => {
+      themeToggleDarkIcon.classList.toggle('hidden');
+      themeToggleLightIcon.classList.toggle('hidden');
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 2.1 — Subagentes e Skills | 32 Hacks do Claude Code</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FACC15',
+            dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    html:not(.dark) .text-blue-400 { color: #2563eb; }
+    html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+    html:not(.dark) .bg-blue-500\/10 { background-color: rgba(37, 99, 235, 0.08); }
+    html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+    html:not(.dark) .hover\:bg-blue-500\/30:hover { background-color: rgba(37, 99, 235, 0.18); }
+
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+
+    html:not(.dark) .hover\:text-emerald-400:hover { color: #059669; }
+    html:not(.dark) .hover\:bg-emerald-500\/10:hover { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .hover\:text-purple-400:hover { color: #7c3aed; }
+    html:not(.dark) .hover\:bg-purple-500\/10:hover { background-color: rgba(124, 58, 237, 0.08); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAVIGATION -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">⚡</span>
+            <span class="font-bold text-lg hidden sm:inline">32 Hacks do Claude Code</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+            <span class="sm:hidden">T1</span><span class="hidden sm:inline">Iniciante</span>
+          </a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-blue-400 bg-blue-500/10">
+            <span class="sm:hidden">T2</span><span class="hidden sm:inline">Intermediário</span>
+          </a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors">
+            <span class="sm:hidden">T3</span><span class="hidden sm:inline">Avançado</span>
+          </a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-blue-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-blue-400">Trilha 2 — Intermediário</a>
+      <span>/</span>
+      <span class="text-blue-400">Módulo 2.1</span>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-blue-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full mb-4">
+        MÓDULO 2.1
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🤖 Subagentes e Skills</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">
+        Paralelismo real no Claude Code. Aprenda a delegar tarefas para subagentes isolados, criar skills reutilizáveis para a equipe e controlar custos com o modelo certo para cada trabalho.
+      </p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-blue-400">3</div>
+          <div class="text-xs text-neutral-400">Hacks</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-blue-400">60</div>
+          <div class="text-xs text-neutral-400">Minutos</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-blue-400">Inter.</div>
+          <div class="text-xs text-neutral-400">Nível</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-blue-400">Prático</div>
+          <div class="text-xs text-neutral-400">Tipo</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- HACK 11 -->
+    <section id="hack-11" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">11</span>
+        <h2 class="text-2xl font-bold">🧩 Subagentes Paralelos</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        O Claude Code pode criar <strong class="text-blue-400">subagentes isolados</strong> para trabalhar em paralelo em partes diferentes de um problema complexo. Cada subagente tem sua própria janela de contexto limpa e, opcionalmente, seu próprio modelo. No final, todos reportam à sessão principal que consolida os resultados.
+      </p>
+
+      <!-- Conceito Principal -->
+      <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center">
+          <span class="mr-2">🧠</span> Como Funciona o Paralelismo
+        </h3>
+        <p class="text-neutral-300 mb-4">A sessão principal age como orquestrador: ela define os subproblemas, cria os subagentes, distribui o trabalho e integra os resultados. Cada subagente não vê o contexto dos outros.</p>
+        <ul class="space-y-2 text-neutral-300">
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Contexto isolado:</strong> cada subagente começa com janela limpa — sem contaminação entre tarefas</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Modelo configurável:</strong> subagente de pesquisa pode usar Haiku; subagente de síntese usa Sonnet</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Reporte estruturado:</strong> cada subagente devolve um resumo compacto ao orquestrador</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Paralelismo real:</strong> as tarefas ocorrem simultaneamente, não em fila</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Terminal Example -->
+      <div class="bg-dark-900 rounded-xl border border-dark-600 p-6 mb-6 font-mono text-sm">
+        <div class="text-neutral-500 mb-3"># Exemplo de prompt para ativar subagentes paralelos</div>
+        <div class="text-neutral-300 leading-relaxed">
+          <span class="text-blue-400">Você:</span> "Preciso refatorar o módulo de autenticação. Use subagentes paralelos:<br>
+          <span class="ml-4">- Subagente 1: analise os testes existentes e identifique gaps de cobertura</span><br>
+          <span class="ml-4">- Subagente 2: pesquise padrões de segurança JWT mais recentes</span><br>
+          <span class="ml-4">- Subagente 3: mapeie todos os pontos de entrada da autenticação no código</span><br>
+          Quando terminarem, consolide os achados e proponha o plano de refatoração."
+        </div>
+        <div class="mt-4 text-neutral-500"># Claude cria 3 subagentes, cada um com contexto próprio</div>
+        <div class="text-neutral-500"># Os 3 rodam em paralelo e reportam ao final</div>
+      </div>
+
+      <!-- Dica Prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> Dica Prática
+        </h3>
+        <p class="text-neutral-300">Especifique explicitamente "use subagentes paralelos" no prompt. O Claude não faz isso automaticamente — você precisa pedir. Quanto mais claro for o escopo de cada subagente, melhores serão os relatórios devolvidos.</p>
+      </div>
+
+      <!-- Fazer vs Evitar -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ O que FAZER</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Definir escopo claro para cada subagente</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Usar subagentes para tarefas realmente independentes</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Pedir relatório estruturado de cada subagente</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Escolher modelo adequado por tipo de tarefa</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ O que NÃO fazer</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Criar subagentes para tarefas sequencialmente dependentes</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Deixar o escopo de cada agente vago</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Usar subagentes para tarefas triviais (overhead desnecessário)</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Ignorar os relatórios e pedir tudo de novo</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- HACK 12 -->
+    <section id="hack-12" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">12</span>
+        <h2 class="text-2xl font-bold">⚙️ Skills Personalizadas</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Skills são arquivos de prompt <strong class="text-blue-400">versionados no repositório</strong> que definem procedimentos reutilizáveis. Crie uma vez, invoque em qualquer sessão, compartilhe com toda a equipe. O resultado é padronização de processo sem atrito.
+      </p>
+
+      <!-- Conceito Principal -->
+      <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center">
+          <span class="mr-2">📁</span> Estrutura de Skills
+        </h3>
+        <p class="text-neutral-300 mb-4">Skills vivem em <code class="text-blue-400">.claude/skills/</code>. Cada arquivo é um prompt markdown que descreve um procedimento específico.</p>
+        <ul class="space-y-2 text-neutral-300">
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>techdebt.md</strong> — instrui o Claude a varrer dívida técnica: TODOs, código duplicado, dependências antigas</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>code-review.md</strong> — define como revisar PRs: checklist de segurança, performance, legibilidade</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>api-docs.md</strong> — padrão de documentação de endpoints da equipe</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>deploy-check.md</strong> — lista de verificação pré-deploy específica do projeto</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Terminal Example -->
+      <div class="bg-dark-900 rounded-xl border border-dark-600 p-6 mb-6 font-mono text-sm">
+        <div class="text-neutral-500 mb-3"># Estrutura de arquivos</div>
+        <div class="text-neutral-300">
+          .claude/<br>
+          <span class="ml-4">skills/</span><br>
+          <span class="ml-8 text-blue-400">techdebt.md</span><br>
+          <span class="ml-8 text-blue-400">code-review.md</span><br>
+          <span class="ml-8 text-blue-400">api-docs.md</span><br>
+          <span class="ml-8 text-blue-400">deploy-check.md</span><br>
+          <span class="ml-4">CLAUDE.md</span>
+        </div>
+        <div class="mt-4 text-neutral-500 mb-2"># Invocação por linguagem natural</div>
+        <div class="text-neutral-300"><span class="text-blue-400">Você:</span> "Rode a skill de revisão de dívida técnica neste módulo"</div>
+        <div class="mt-2 text-neutral-500 mb-2"># Invocação por slash command</div>
+        <div class="text-neutral-300"><span class="text-blue-400">Você:</span> /techdebt src/auth/</div>
+      </div>
+
+      <!-- Dados/Pesquisa -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center">
+          <span class="mr-2">📊</span> Por que versionar Skills no Repo
+        </h3>
+        <ul class="space-y-2 text-neutral-300">
+          <li><strong class="text-blue-400">Padronização:</strong> todos na equipe usam exatamente os mesmos procedimentos</li>
+          <li><strong class="text-blue-400">Histórico:</strong> evolução das skills rastreada pelo git como qualquer outro código</li>
+          <li><strong class="text-blue-400">Onboarding:</strong> novo membro do time herda todo o conhecimento acumulado automaticamente</li>
+          <li><strong class="text-blue-400">Revisão:</strong> PRs de skills permitem discussão sobre processo antes de adotar</li>
+        </ul>
+      </div>
+
+      <!-- Dica Prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> Dica Prática
+        </h3>
+        <p class="text-neutral-300">Comece com apenas 2–3 skills para os processos mais repetitivos da equipe. Skills de code review e techdebt são bons pontos de partida porque todo projeto acumula dívida e toda equipe revisa código. Adicione mais conforme as necessidades ficam claras.</p>
+      </div>
+
+      <!-- Fazer vs Evitar -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ O que FAZER</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Versionar skills no repositório com git</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Nomear arquivos de forma descritiva</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Incluir exemplos de output esperado na skill</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Revisar e atualizar skills conforme o processo evolui</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ O que NÃO fazer</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Criar skills muito genéricas (sem valor específico)</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Manter skills desatualizadas no repo</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Ter skills só no seu setup local (não compartilhadas)</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Criar skills para tarefas que só acontecem uma vez</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- HACK 13 -->
+    <section id="hack-13" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl flex-shrink-0">13</span>
+        <h2 class="text-2xl font-bold">💰 Haiku para Subagentes</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Ao criar subagentes, você pode definir o <strong class="text-blue-400">modelo de cada um individualmente</strong>. Para processamento de grandes volumes de dados ou tarefas mecânicas, use Haiku. Reserve Opus ou Sonnet para síntese e decisões críticas. O resultado: custo controlado sem sacrificar qualidade onde importa.
+      </p>
+
+      <!-- Conceito Principal -->
+      <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center">
+          <span class="mr-2">⚖️</span> Estratégia de Modelos por Papel
+        </h3>
+        <p class="text-neutral-300 mb-4">Pense nos subagentes como uma equipe com papéis diferentes. Analistas de dados (Haiku) coletam e processam em volume. O gerente sênior (Opus) toma as decisões com base nos resumos recebidos.</p>
+        <ul class="space-y-2 text-neutral-300">
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Haiku:</strong> leitura de arquivos, busca de padrões, extração de dados, sumarização de logs</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Sonnet:</strong> análise de código moderada, escrita de testes, tarefas de complexidade média</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-blue-400 mt-1">•</span>
+            <span><strong>Opus:</strong> síntese final, decisões arquiteturais, revisão crítica, raciocínio complexo</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Terminal Example -->
+      <div class="bg-dark-900 rounded-xl border border-dark-600 p-6 mb-6 font-mono text-sm">
+        <div class="text-neutral-500 mb-3"># Pipeline com modelos mistos</div>
+        <div class="text-neutral-300 leading-relaxed">
+          <span class="text-blue-400">Você:</span> "Analise os 500 arquivos de log do último mês e identifique<br>
+          padrões de erro recorrentes.<br><br>
+          Use subagentes com Haiku para processar os logs<br>
+          (centenas de milhares de tokens, tarefa mecânica).<br>
+          Após o processamento, consolide os achados aqui<br>
+          no Opus e proponha as correções necessárias."
+        </div>
+        <div class="mt-4 text-neutral-500 mb-2"># Resultado: custo de Haiku para 500k tokens de log</div>
+        <div class="text-neutral-500">#           custo de Opus apenas para o resumo final (~2k tokens)</div>
+      </div>
+
+      <!-- Dados/Pesquisa -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center">
+          <span class="mr-2">📊</span> Impacto no Custo
+        </h3>
+        <ul class="space-y-2 text-neutral-300">
+          <li><strong class="text-blue-400">Cenário sem otimização:</strong> 500k tokens processados no Opus — custo elevado para tarefa mecânica</li>
+          <li><strong class="text-blue-400">Cenário otimizado:</strong> 500k tokens no Haiku + 2k tokens de resumo no Opus — economia de ~90%</li>
+          <li><strong class="text-blue-400">Qualidade mantida:</strong> o Opus ainda faz a análise final com o resumo compacto recebido</li>
+          <li><strong class="text-blue-400">Escalabilidade:</strong> processar 10x mais dados com o mesmo orçamento</li>
+        </ul>
+      </div>
+
+      <!-- Dica Prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> Dica Prática
+        </h3>
+        <p class="text-neutral-300">Sempre que um subagente vai processar dados em volume (logs, arquivos, listas longas), use Haiku. A chave é garantir que o subagente devolva um resumo compacto — não o dado bruto — para que o agente principal no modelo mais capaz trabalhe de forma eficiente.</p>
+      </div>
+
+      <!-- Fazer vs Evitar -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ O que FAZER</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Usar Haiku para extração, busca e sumarização em volume</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Pedir resumo compacto de volta (não o dado bruto)</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Reservar Opus para síntese e raciocínio complexo</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400">✓</span><span>Definir o modelo explicitamente por subagente</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ O que NÃO fazer</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Usar Opus para varrer arquivos em volume</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Deixar subagentes enviarem dados brutos ao orquestrador</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Usar Haiku para decisões arquiteturais complexas</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400">✗</span><span>Não monitorar o custo real das sessões</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-blue-900/40 via-dark-800 to-dark-800 rounded-xl border border-blue-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center">
+          <span class="mr-3">✅</span> Resumo do Módulo 2.1
+        </h2>
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3">
+            <span class="text-blue-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Subagentes paralelos</strong>
+              <span class="text-neutral-400"> — delega partes independentes de um problema para agentes com contexto isolado</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-blue-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Skills em .claude/skills/</strong>
+              <span class="text-neutral-400"> — prompts reutilizáveis versionados no repo, compartilhados com a equipe</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-blue-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Haiku para volume, Opus para decisão</strong>
+              <span class="text-neutral-400"> — modelo certo para cada papel reduz custo em até 90% sem perda de qualidade</span>
+            </div>
+          </div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-blue-400 mb-2">Próximo Módulo:</h3>
+          <p class="text-neutral-300">2.2 — Claude.md como Sistema Vivo: mantenha o contexto do projeto sempre atualizado e evite erros repetidos.</p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="../trilha1/modulo-1-3.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">
+            ← Módulo Anterior (1.3)
+          </a>
+          <a href="modulo-2-2.html" class="flex-1 text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition-colors">
+            Próximo Módulo →
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-dark-600 py-8 mt-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>32 Hacks do Claude Code — <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> — 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) {
+      themeToggleDarkIcon.classList.remove('hidden'); html.classList.remove('dark');
+    } else { themeToggleLightIcon.classList.remove('hidden'); }
+    themeToggle.addEventListener('click', () => {
+      themeToggleDarkIcon.classList.toggle('hidden'); themeToggleLightIcon.classList.toggle('hidden');
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>

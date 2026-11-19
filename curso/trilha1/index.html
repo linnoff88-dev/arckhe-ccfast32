@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trilha 1 - Iniciante | 32 Hacks do Claude Code</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FACC15',
+            dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+
+    /* Light mode overrides - OBRIGATORIO */
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    /* Light mode - cores de acento (trilha emerald) */
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+    html:not(.dark) .bg-emerald-500\/10 { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+    html:not(.dark) .hover\:bg-emerald-500\/30:hover { background-color: rgba(5, 150, 105, 0.18); }
+
+    /* Light mode - remove gradientes (fundo uniforme) */
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+
+    /* Light mode - cores especiais */
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+
+    /* Light mode - nav */
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAVIGATION -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">⚡</span>
+            <span class="font-bold text-lg hidden sm:inline">32 Hacks do Claude Code</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-emerald-400 bg-emerald-500/10">
+            <span class="sm:hidden">T1</span><span class="hidden sm:inline">Iniciante</span>
+          </a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+            <span class="sm:hidden">T2</span><span class="hidden sm:inline">Intermediário</span>
+          </a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors">
+            <span class="sm:hidden">T3</span><span class="hidden sm:inline">Avançado</span>
+          </a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-emerald-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded-full mb-4">
+        TRILHA 1
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🌱 Iniciante — Configuração e Fundamentos</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">
+        Configure o ambiente ideal, domine o gerenciamento de contexto e estabeleça um fluxo de trabalho inteligente com o Claude Code. Esta trilha cobre os 10 primeiros hacks essenciais para qualquer desenvolvedor.
+      </p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">3</div>
+          <div class="text-xs text-neutral-400">Módulos</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">10</div>
+          <div class="text-xs text-neutral-400">Hacks</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">~3h</div>
+          <div class="text-xs text-neutral-400">Duração</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">Base</div>
+          <div class="text-xs text-neutral-400">Nível</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- NAVEGACAO RAPIDA -->
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h2 class="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-4">Módulos desta Trilha</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+      <a href="modulo-1-1.html" class="bg-dark-800 rounded-xl border border-dark-600 p-5 hover:border-emerald-500/30 hover:bg-dark-700/50 transition-all group">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-emerald-400 font-bold text-sm">1.1</span>
+          <span class="text-xs text-neutral-500">~45 min</span>
+        </div>
+        <h3 class="font-semibold group-hover:text-emerald-400 transition-colors">⚙️ Configuração Inicial</h3>
+        <p class="text-neutral-500 text-sm mt-1">Hacks 1–3</p>
+      </a>
+      <a href="modulo-1-2.html" class="bg-dark-800 rounded-xl border border-dark-600 p-5 hover:border-emerald-500/30 hover:bg-dark-700/50 transition-all group">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-emerald-400 font-bold text-sm">1.2</span>
+          <span class="text-xs text-neutral-500">~50 min</span>
+        </div>
+        <h3 class="font-semibold group-hover:text-emerald-400 transition-colors">🧠 Gerenciar Contexto</h3>
+        <p class="text-neutral-500 text-sm mt-1">Hacks 4–6</p>
+      </a>
+      <a href="modulo-1-3.html" class="bg-dark-800 rounded-xl border border-dark-600 p-5 hover:border-emerald-500/30 hover:bg-dark-700/50 transition-all group">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-emerald-400 font-bold text-sm">1.3</span>
+          <span class="text-xs text-neutral-500">~80 min</span>
+        </div>
+        <h3 class="font-semibold group-hover:text-emerald-400 transition-colors">🔄 Fluxo Inteligente</h3>
+        <p class="text-neutral-500 text-sm mt-1">Hacks 7–10</p>
+      </a>
+    </div>
+
+    <div class="flex items-center space-x-4 mb-8">
+      <div class="h-px flex-1 bg-dark-600"></div>
+      <span class="text-sm text-neutral-500 font-medium">Conteúdo Detalhado</span>
+      <div class="h-px flex-1 bg-dark-600"></div>
+    </div>
+
+    <!-- MODULO 1.1 -->
+    <div class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-emerald-400 font-bold">1.1</span>
+          <span class="text-xs text-neutral-500">~45 min</span>
+        </div>
+        <h3 class="text-2xl font-bold mb-2">⚙️ Configuração Inicial</h3>
+        <p class="text-neutral-400 text-sm">Configure seu ambiente Claude Code do zero: inicialize projetos automaticamente, monitore seu terminal em tempo real e acelere o trabalho com entrada por voz.</p>
+      </div>
+
+      <div class="divide-y divide-dark-600">
+        <!-- Hack 1 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
+            <span class="text-lg">⚙️</span>
+            <div>
+              <span class="font-medium">Hack 1 — /init</span>
+              <span class="text-neutral-500 text-sm ml-2">- Inicialize qualquer projeto automaticamente</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-emerald-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">O comando <code class="bg-dark-600 px-1 rounded">/init</code> escaneia todo o projeto — pastas, arquivos, arquitetura — e gera um arquivo <code class="bg-dark-600 px-1 rounded">CLAUDE.md</code> que serve como folha de referência permanente do projeto.</p>
+              </div>
+              <div>
+                <span class="text-emerald-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Elimina a necessidade de reexplicar o projeto a cada nova sessão. O Claude consulta automaticamente o CLAUDE.md e já sabe as convenções, arquivos importantes e decisões arquiteturais do projeto.</p>
+              </div>
+              <div>
+                <span class="text-emerald-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Execute em todo projeto novo; CLAUDE.md persiste entre sessões; pode ser editado manualmente para adicionar regras específicas; funciona como memória permanente do projeto.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hack 2 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
+            <span class="text-lg">📊</span>
+            <div>
+              <span class="font-medium">Hack 2 — Statusline</span>
+              <span class="text-neutral-500 text-sm ml-2">- Mini painel no terminal</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-emerald-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">O comando <code class="bg-dark-600 px-1 rounded">/statusline</code> gera um script customizável que exibe informações em tempo real na parte inferior do terminal: modelo ativo, porcentagem de contexto utilizado, custo da sessão e outros dados.</p>
+              </div>
+              <div>
+                <span class="text-emerald-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Permite monitorar continuamente o uso do contexto. Quando o contexto começa a encher, o desempenho degrada — o statusline avisa antes de chegar a esse ponto, permitindo ação proativa.</p>
+              </div>
+              <div>
+                <span class="text-emerald-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Configure o que exibir ao chamar o comando; script fica ativo durante a sessão; informações de modelo, contexto e custo disponíveis; substitui verificações manuais frequentes.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hack 3 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
+            <span class="text-lg">🎤</span>
+            <div>
+              <span class="font-medium">Hack 3 — Entrada por Voz</span>
+              <span class="text-neutral-500 text-sm ml-2">- Digitar menos, produzir mais</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-emerald-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">O Claude Code inclui o comando nativo <code class="bg-dark-600 px-1 rounded">/voice</code> para ditado direto no terminal. Alternativamente, qualquer app de ditado por voz do sistema operacional funciona perfeitamente com o terminal.</p>
+              </div>
+              <div>
+                <span class="text-emerald-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Voz é mais rápida do que digitação para prompts longos e descritivos. Reduz fricção na hora de explicar contexto, descrever problemas complexos e dar instruções detalhadas ao Claude.</p>
+              </div>
+              <div>
+                <span class="text-emerald-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Use /voice nativo ou ditado do SO; ideal para prompts de contexto rico; não precisar digitar = fluxo mais ágil; combine com o CLAUDE.md para sessões ainda mais rápidas.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-1-1')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors">Ver em Modal</button>
+        <a href="modulo-1-1.html" class="px-4 py-2 text-sm bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition-colors">Ver Completo</a>
+      </div>
+    </div>
+
+    <!-- MODULO 1.2 -->
+    <div class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-emerald-400 font-bold">1.2</span>
+          <span class="text-xs text-neutral-500">~50 min</span>
+        </div>
+        <h3 class="text-2xl font-bold mb-2">🧠 Gerenciar Contexto</h3>
+        <p class="text-neutral-400 text-sm">O contexto é o recurso mais crítico no Claude Code. Aprenda a mantê-lo enxuto, monitore o consumo em tempo real e saiba exatamente quando e como comprimir ou reiniciar.</p>
+      </div>
+
+      <div class="divide-y divide-dark-600">
+        <!-- Hack 4 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center flex-shrink-0">4</span>
+            <span class="text-lg">🎯</span>
+            <div>
+              <span class="font-medium">Hack 4 — Contexto Pequeno</span>
+              <span class="text-neutral-500 text-sm ml-2">- Menos ruído, melhor desempenho</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-emerald-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">Estratégia de dar ao Claude apenas o contexto relevante para a tarefa atual, em vez de despejar toda a base de código. Dividir problemas grandes em etapas focadas e fornecer apenas os arquivos necessários para cada etapa.</p>
+              </div>
+              <div>
+                <span class="text-emerald-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Contexto excessivo causa degradação de qualidade: o Claude começa a perder o fio de raciocínio, mistura informações irrelevantes e comete erros evitáveis. Menos contexto = foco maior = melhores resultados.</p>
+              </div>
+              <div>
+                <span class="text-emerald-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Divida problemas grandes em microtarefas; forneça apenas arquivos necessários; evite colar código inteiro quando apenas um trecho importa; prefira contexto cirúrgico a contexto completo.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hack 5 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center flex-shrink-0">5</span>
+            <span class="text-lg">🔍</span>
+            <div>
+              <span class="font-medium">Hack 5 — /context</span>
+              <span class="text-neutral-500 text-sm ml-2">- Diagnóstico de consumo de tokens</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-emerald-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">O comando <code class="bg-dark-600 px-1 rounded">/context</code> exibe um relatório detalhado de tudo que está consumindo tokens na sessão atual: prompts de sistema, conteúdo de arquivos carregados, servidores MCP ativos e histórico da conversa.</p>
+              </div>
+              <div>
+                <span class="text-emerald-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Sessões que parecem lentas ou imprecisas frequentemente estão com contexto sobrecarregado. O /context permite diagnosticar exatamente o que está pesando e tomar ações específicas em vez de reiniciar tudo às cegas.</p>
+              </div>
+              <div>
+                <span class="text-emerald-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Mostra distribuição percentual do contexto; identifica arquivos ou MCPs consumindo demais; use antes de compactar; ideal para sessões longas que perderam performance.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hack 6 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center flex-shrink-0">6</span>
+            <span class="text-lg">🗜️</span>
+            <div>
+              <span class="font-medium">Hack 6 — /compact e /clear</span>
+              <span class="text-neutral-500 text-sm ml-2">- Compressão inteligente do histórico</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-emerald-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm"><code class="bg-dark-600 px-1 rounded">/compact</code> comprime o histórico da conversa mantendo os detalhes mais importantes. <code class="bg-dark-600 px-1 rounded">/clear</code> reinicia completamente o contexto. Ambos preservam arquivos e o CLAUDE.md.</p>
+              </div>
+              <div>
+                <span class="text-emerald-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Quando o contexto chega a ~60%, a qualidade das respostas começa a cair. /compact recupera performance sem perder decisões importantes. /clear é ideal quando uma tarefa termina e outra começa — contexto limpo, mente limpa.</p>
+              </div>
+              <div>
+                <span class="text-emerald-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Use /compact em ~60% do contexto; passe instruções específicas como "/compact but keep all API decisions"; use /clear ao mudar de tarefa; CLAUDE.md sempre persiste independente de compact ou clear.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-1-2')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors">Ver em Modal</button>
+        <a href="modulo-1-2.html" class="px-4 py-2 text-sm bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition-colors">Ver Completo</a>
+      </div>
+    </div>
+
+    <!-- MODULO 1.3 -->
+    <div class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+      <div class="p-6 border-b border-dark-600">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-emerald-400 font-bold">1.3</span>
+          <span class="text-xs text-neutral-500">~80 min</span>
+        </div>
+        <h3 class="text-2xl font-bold mb-2">🔄 Fluxo de Trabalho Inteligente</h3>
+        <p class="text-neutral-400 text-sm">Estabeleça um fluxo de trabalho que elimina retrabalho: planejamento antes da execução, interação colaborativa com o Claude e verificação integrada em cada etapa.</p>
+      </div>
+
+      <div class="divide-y divide-dark-600">
+        <!-- Hack 7 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center flex-shrink-0">7</span>
+            <span class="text-lg">📋</span>
+            <div>
+              <span class="font-medium">Hack 7 — Plan Mode</span>
+              <span class="text-neutral-500 text-sm ml-2">- Planejar antes de executar</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-emerald-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">Modo ativado com <strong>Shift+Tab</strong> onde o Claude apenas lê e pesquisa — sem modificar nada — até que você aprove o plano. O Claude descreve as etapas, faz perguntas de esclarecimento e mapeia toda a abordagem antes de agir.</p>
+              </div>
+              <div>
+                <span class="text-emerald-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Reduz drasticamente idas e vindas. Quando o Claude executa sem planejar, frequentemente toma decisões erradas que precisam ser desfeitas. Com plan mode, você valida a abordagem antes de qualquer alteração no código.</p>
+              </div>
+              <div>
+                <span class="text-emerald-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Shift+Tab alterna entre modos; leitura sem escrita no plan mode; aprovação explícita antes de executar; Claude faz perguntas de esclarecimento; ideal para tarefas complexas ou de alto impacto.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hack 8 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center flex-shrink-0">8</span>
+            <span class="text-lg">👨‍💻</span>
+            <div>
+              <span class="font-medium">Hack 8 — Dev Júnior</span>
+              <span class="text-neutral-500 text-sm ml-2">- Apresente problemas, não comandos</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-emerald-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">Em vez de dar comandos diretos como "escreva uma função X", apresentar o problema como faria com um dev júnior: "Como devemos lidar com rastreamento de crescimento?" e deixar o Claude raciocinar sobre a solução.</p>
+              </div>
+              <div>
+                <span class="text-emerald-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">Quando o Claude raciocina sobre o problema e formula suas próprias suposições, a qualidade melhora visivelmente. Explicar o raciocínio obriga o modelo a considerar trade-offs que comandos diretos ignoram.</p>
+              </div>
+              <div>
+                <span class="text-emerald-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Descreva o problema, não a solução; peça que o Claude explique as suposições; valide o raciocínio antes de implementar; problemas bem descritos geram soluções melhores que comandos precisos.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hack 9 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center flex-shrink-0">9</span>
+            <span class="text-lg">❓</span>
+            <div>
+              <span class="font-medium">Hack 9 — Faça Perguntas</span>
+              <span class="text-neutral-500 text-sm ml-2">- 95% de confiança antes de agir</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-emerald-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">Instrução explícita para o Claude: "Faça perguntas continuamente até estar 95% confiante de que entende exatamente o que precisa ser feito." O Claude passa a questionar ativamente ambiguidades antes de começar qualquer trabalho.</p>
+              </div>
+              <div>
+                <span class="text-emerald-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">O alinhamento inicial evita 3 ou 4 rodadas de revisão. É muito mais rápido responder 5 perguntas do Claude no início do que revisar código que foi na direção errada por falta de clareza.</p>
+              </div>
+              <div>
+                <span class="text-emerald-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Instrua o Claude explicitamente a perguntar; defina o threshold de confiança (95%); perguntas no início salvam tempo no final; inclua essa instrução no CLAUDE.md para aplicar em todos os projetos.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hack 10 -->
+        <div class="topic-item">
+          <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+            <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center flex-shrink-0">10</span>
+            <span class="text-lg">✅</span>
+            <div>
+              <span class="font-medium">Hack 10 — Autoverificação</span>
+              <span class="text-neutral-500 text-sm ml-2">- Verificar antes de avançar</span>
+            </div>
+          </button>
+          <div class="topic-explanation px-6 pb-4">
+            <div class="bg-dark-700/50 rounded-lg p-4 space-y-3 ml-9">
+              <div>
+                <span class="text-emerald-400 font-semibold">O que é:</span>
+                <p class="text-neutral-300 text-sm">Incluir etapas de verificação explícitas na lista de tarefas do Claude: construir, tirar screenshot e verificar, abrir DevTools e confirmar sem erros — e só avançar quando estiver 95% confiante que a tarefa atual está correta.</p>
+              </div>
+              <div>
+                <span class="text-emerald-400 font-semibold">Por que aprender:</span>
+                <p class="text-neutral-300 text-sm">O Claude por padrão avança na lista de tarefas sem verificar. Quando uma tarefa falha silenciosamente, as próximas tarefas constroem sobre uma base quebrada. A autoverificação detecta problemas no ponto de origem.</p>
+              </div>
+              <div>
+                <span class="text-emerald-400 font-semibold">Conceitos-chave:</span>
+                <p class="text-neutral-300 text-sm">Sequência: construir → screenshot → DevTools → confirmar; regra "não avançar sem 95% de confiança"; inclua checagens explícitas no plano de tarefas; combine com plan mode para máxima segurança.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 bg-dark-700/30 flex justify-start space-x-3">
+        <button onclick="openModal('modal-1-3')" class="px-4 py-2 text-sm bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors">Ver em Modal</button>
+        <a href="modulo-1-3.html" class="px-4 py-2 text-sm bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition-colors">Ver Completo</a>
+      </div>
+    </div>
+
+    <!-- NAVEGACAO INFERIOR -->
+    <div class="flex flex-col sm:flex-row gap-4 mt-10">
+      <a href="../../index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">
+        ← Voltar para Início
+      </a>
+      <a href="../trilha2/index.html" class="flex-1 text-center px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-500 transition-colors">
+        Próxima Trilha: Intermediário →
+      </a>
+    </div>
+  </div>
+
+  <!-- MODALS -->
+  <div id="modal-1-1" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3">
+          <span class="text-emerald-400 font-bold">1.1</span>
+          <span class="font-semibold">⚙️ Configuração Inicial</span>
+        </div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <iframe src="modulo-1-1.html" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+
+  <div id="modal-1-2" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3">
+          <span class="text-emerald-400 font-bold">1.2</span>
+          <span class="font-semibold">🧠 Gerenciar Contexto</span>
+        </div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <iframe src="modulo-1-2.html" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+
+  <div id="modal-1-3" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80" onclick="if(event.target === this) closeModal()">
+    <div class="bg-dark-800 rounded-xl w-full max-w-6xl h-[95vh] flex flex-col border border-dark-600">
+      <div class="p-4 border-b border-dark-600 flex justify-between items-center flex-shrink-0">
+        <div class="flex items-center space-x-3">
+          <span class="text-emerald-400 font-bold">1.3</span>
+          <span class="font-semibold">🔄 Fluxo de Trabalho Inteligente</span>
+        </div>
+        <button onclick="closeModal()" class="text-neutral-400 hover:text-white text-2xl leading-none">&times;</button>
+      </div>
+      <iframe src="modulo-1-3.html" class="flex-1 w-full rounded-b-xl"></iframe>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-dark-600 py-8 mt-16">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>32 Hacks do Claude Code · <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> · 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    function toggleTopic(button) {
+      const topicItem = button.closest('.topic-item');
+      const explanation = topicItem.querySelector('.topic-explanation');
+      const moduleCard = button.closest('.bg-dark-800');
+      moduleCard.querySelectorAll('.topic-explanation.active').forEach(exp => {
+        if (exp !== explanation) exp.classList.remove('active');
+      });
+      explanation.classList.toggle('active');
+    }
+
+    function openModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) { modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+    }
+
+    function closeModal() {
+      document.querySelectorAll('.modal').forEach(modal => modal.classList.add('hidden'));
+      document.body.style.overflow = 'auto';
+    }
+
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) {
+      themeToggleDarkIcon.classList.remove('hidden');
+      html.classList.remove('dark');
+    } else {
+      themeToggleLightIcon.classList.remove('hidden');
+    }
+    themeToggle.addEventListener('click', () => {
+      themeToggleDarkIcon.classList.toggle('hidden');
+      themeToggleLightIcon.classList.toggle('hidden');
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>

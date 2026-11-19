@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 3.1 — Paralelismo Real | 32 Hacks do Claude Code</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FACC15',
+            dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .bg-purple-500\/20 { background-color: rgba(124, 58, 237, 0.12); }
+    html:not(.dark) .bg-purple-500\/10 { background-color: rgba(124, 58, 237, 0.08); }
+    html:not(.dark) .border-purple-500\/30 { border-color: rgba(124, 58, 237, 0.25); }
+    html:not(.dark) .hover\:bg-purple-500\/30:hover { background-color: rgba(124, 58, 237, 0.18); }
+
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAVIGATION -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">⚡</span>
+            <span class="font-bold text-lg hidden sm:inline">32 Hacks do Claude Code</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+            <span class="sm:hidden">T1</span><span class="hidden sm:inline">Iniciante</span>
+          </a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+            <span class="sm:hidden">T2</span><span class="hidden sm:inline">Intermediário</span>
+          </a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-purple-400 bg-purple-500/10">
+            <span class="sm:hidden">T3</span><span class="hidden sm:inline">Avançado</span>
+          </a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-purple-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-purple-400">Trilha 3 - Avançado</a>
+      <span>/</span>
+      <span class="text-purple-400">Módulo 3.1</span>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-purple-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-semibold rounded-full mb-4">
+        MÓDULO 3.1
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🔀 Paralelismo Real</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">
+        Pare de trabalhar sequencialmente quando você pode ter múltiplos agentes trabalhando ao mesmo tempo. Git Worktrees eliminam conflitos; Equipes de Agentes adicionam coordenação inteligente.
+      </p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-purple-400">2</div>
+          <div class="text-xs text-neutral-400">Hacks</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-purple-400">60</div>
+          <div class="text-xs text-neutral-400">Minutos</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-purple-400">Pro</div>
+          <div class="text-xs text-neutral-400">Nível</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-purple-400">Prática</div>
+          <div class="text-xs text-neutral-400">Tipo</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTEUDO -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- HACK 23 -->
+    <section id="hack-23" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">23</span>
+        <h2 class="text-2xl font-bold">🌿 Git Worktrees — Paralelismo Seguro</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Rodar dois agentes Claude na mesma pasta é uma receita para conflito. Quando o Agente A modifica <strong class="text-purple-400">src/auth.ts</strong> e o Agente B também modifica o mesmo arquivo ao mesmo tempo, um sobrescreve o outro — silenciosamente. <strong class="text-purple-400">Git Worktrees</strong> resolvem isso de forma estrutural, criando cópias paralelas e eficientes do projeto, cada uma em sua própria branch.
+      </p>
+
+      <!-- Conceito Principal -->
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-4 flex items-center">
+          <span class="mr-2">🌿</span> Como Worktrees Funcionam
+        </h3>
+        <p class="text-neutral-300 mb-4">Cada worktree é um diretório separado no disco, com sua própria cópia do working tree, mas compartilhando o mesmo repositório git. Isso é mais eficiente que clonar — arquivos não modificados são links, não cópias.</p>
+        <ul class="space-y-2 text-neutral-300">
+          <li class="flex items-start space-x-2">
+            <span class="text-purple-400 mt-1">•</span>
+            <span>Cada worktree tem sua própria branch ativa</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-purple-400 mt-1">•</span>
+            <span>Mudanças em um worktree não afetam os outros</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-purple-400 mt-1">•</span>
+            <span>Todos compartilham o mesmo histórico git</span>
+          </li>
+          <li class="flex items-start space-x-2">
+            <span class="text-purple-400 mt-1">•</span>
+            <span>Mesclagem normal via pull request ou git merge</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Terminal Example -->
+      <div class="bg-dark-900 rounded-xl border border-dark-600 p-6 mb-6 font-mono text-sm">
+        <div class="flex items-center space-x-2 mb-4">
+          <div class="w-3 h-3 rounded-full bg-red-500"></div>
+          <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+          <div class="w-3 h-3 rounded-full bg-green-500"></div>
+          <span class="text-neutral-500 ml-2 font-sans text-xs">Terminal — Setup com Git Worktrees</span>
+        </div>
+        <div class="space-y-2 text-neutral-300">
+          <p><span class="text-purple-400"># Criar worktrees para duas features paralelas</span></p>
+          <p><span class="text-green-400">$</span> claude-worktree feature-auth</p>
+          <p class="text-neutral-500">&gt; Criando worktree em ../projeto-feature-auth (branch: feature-auth)</p>
+          <p class="text-neutral-500">&gt; Workspace pronto. Claude Code iniciado.</p>
+          <p class="mt-3"><span class="text-purple-400"># Em outro terminal</span></p>
+          <p><span class="text-green-400">$</span> claude-worktree feature-payments</p>
+          <p class="text-neutral-500">&gt; Criando worktree em ../projeto-feature-payments (branch: feature-payments)</p>
+          <p class="text-neutral-500">&gt; Workspace pronto. Claude Code iniciado.</p>
+          <p class="mt-3"><span class="text-purple-400"># Verificar worktrees ativos</span></p>
+          <p><span class="text-green-400">$</span> git worktree list</p>
+          <p class="text-neutral-500">/home/user/projeto          abc1234 [main]</p>
+          <p class="text-neutral-500">/home/user/projeto-feature-auth     def5678 [feature-auth]</p>
+          <p class="text-neutral-500">/home/user/projeto-feature-payments ghi9012 [feature-payments]</p>
+          <p class="mt-3"><span class="text-purple-400"># Ao finalizar, mesclar de volta</span></p>
+          <p><span class="text-green-400">$</span> git merge feature-auth</p>
+          <p><span class="text-green-400">$</span> git merge feature-payments</p>
+          <p><span class="text-green-400">$</span> git worktree remove ../projeto-feature-auth</p>
+        </div>
+      </div>
+
+      <!-- Dica Prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> Dica Prática
+        </h3>
+        <p class="text-neutral-300">Abra cada worktree em uma aba ou janela separada do terminal. Use nomes descritivos que refletem a tarefa do agente — <code class="bg-dark-600 px-1 rounded">claude-worktree refactor-api</code> é mais claro que <code class="bg-dark-600 px-1 rounded">claude-worktree wt1</code>. Você pode ver claramente o que cada agente está fazendo pelo nome do diretório.</p>
+      </div>
+
+      <!-- Fazer vs Evitar -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ O que FAZER</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">✓</span>
+              <span>Criar um worktree por feature ou tarefa independente</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">✓</span>
+              <span>Usar nomes descritivos que identificam a tarefa</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">✓</span>
+              <span>Remover worktrees após mesclagem para manter limpo</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-emerald-400">✓</span>
+              <span>Usar para features que não dependem uma da outra</span>
+            </li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ O que NÃO fazer</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2">
+              <span class="text-red-400">✗</span>
+              <span>Rodar dois agentes na mesma pasta sem worktrees</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-red-400">✗</span>
+              <span>Criar worktrees para tarefas que dependem uma da outra</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-red-400">✗</span>
+              <span>Deixar dezenas de worktrees abandonados acumulando</span>
+            </li>
+            <li class="flex items-start space-x-2">
+              <span class="text-red-400">✗</span>
+              <span>Confundir worktrees com múltiplos clones do repositório</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- HACK 31 -->
+    <section id="hack-31" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">31</span>
+        <h2 class="text-2xl font-bold">🤝 Equipes de Agentes — Coordenação Total</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Subagentes rodam em paralelo, mas não se falam. Cada um vive no seu silo — começa com contexto novo, executa sua parte, e não tem ideia do que os outros estão fazendo. <strong class="text-purple-400">Equipes de agentes</strong> quebram esse isolamento. Os membros compartilham uma lista de tarefas, se comunicam diretamente e coordenam o trabalho em tempo real.
+      </p>
+
+      <!-- Conceito Principal -->
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-4 flex items-center">
+          <span class="mr-2">🤝</span> Subagentes vs Equipes de Agentes
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p class="text-neutral-400 text-sm font-semibold mb-2">Subagentes (Hack anterior)</p>
+            <ul class="space-y-1 text-neutral-300 text-sm">
+              <li class="flex items-start space-x-2"><span class="text-neutral-500">→</span><span>Rodam em paralelo, contexto isolado</span></li>
+              <li class="flex items-start space-x-2"><span class="text-neutral-500">→</span><span>Sem comunicação entre si</span></li>
+              <li class="flex items-start space-x-2"><span class="text-neutral-500">→</span><span>Mais rápido e mais barato</span></li>
+              <li class="flex items-start space-x-2"><span class="text-neutral-500">→</span><span>Bom para tarefas independentes</span></li>
+            </ul>
+          </div>
+          <div>
+            <p class="text-purple-400 text-sm font-semibold mb-2">Equipes de Agentes</p>
+            <ul class="space-y-1 text-neutral-300 text-sm">
+              <li class="flex items-start space-x-2"><span class="text-purple-400">→</span><span>Lista de tarefas compartilhada</span></li>
+              <li class="flex items-start space-x-2"><span class="text-purple-400">→</span><span>Comunicação direta entre membros</span></li>
+              <li class="flex items-start space-x-2"><span class="text-purple-400">→</span><span>Mais lento e mais caro</span></li>
+              <li class="flex items-start space-x-2"><span class="text-purple-400">→</span><span>Saída muito mais coesa</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Terminal Example -->
+      <div class="bg-dark-900 rounded-xl border border-dark-600 p-6 mb-6 font-mono text-sm">
+        <div class="flex items-center space-x-2 mb-4">
+          <div class="w-3 h-3 rounded-full bg-red-500"></div>
+          <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+          <div class="w-3 h-3 rounded-full bg-green-500"></div>
+          <span class="text-neutral-500 ml-2 font-sans text-xs">Claude Code — Interação com Equipe de Agentes</span>
+        </div>
+        <div class="space-y-2 text-neutral-300">
+          <p><span class="text-purple-400"># Você fala com o agente coordenador</span></p>
+          <p><span class="text-green-400">Você:</span> Crie uma equipe para construir o módulo de pagamentos.</p>
+          <p><span class="text-green-400">        </span> Agente A: API do Stripe. Agente B: UI de checkout. Agente C: testes.</p>
+          <p class="mt-2 text-neutral-500">[Agente Coordenador]</p>
+          <p><span class="text-purple-400">Claude:</span> Equipe criada. Distribuindo tarefas...</p>
+          <p><span class="text-neutral-500">        → Agente A: implementar endpoints /payment/create e /payment/confirm</span></p>
+          <p><span class="text-neutral-500">        → Agente B: aguardando contrato de API do Agente A antes de prosseguir</span></p>
+          <p><span class="text-neutral-500">        → Agente C: escrevendo testes de integração conforme API é definida</span></p>
+          <p class="mt-3"><span class="text-purple-400"># Você pode falar diretamente com qualquer agente</span></p>
+          <p><span class="text-green-400">Você:</span> @AgentB use o design system existente para o checkout.</p>
+          <p><span class="text-neutral-500">[Agente B recebe a instrução diretamente]</span></p>
+          <p><span class="text-purple-400">Agente B:</span> Entendido. Usando componentes de /src/design-system/...</p>
+        </div>
+      </div>
+
+      <!-- Dados/Pesquisa -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center">
+          <span class="mr-2">📊</span> Quando Vale o Custo Extra
+        </h3>
+        <ul class="space-y-2 text-neutral-300">
+          <li><strong>Projetos grandes com interdependências:</strong> Onde partes diferentes precisam se alinhar constantemente</li>
+          <li><strong>Saída coesa exigida:</strong> Documentação, sistemas com UI + API + testes integrados</li>
+          <li><strong>Revisão cruzada:</strong> Agentes podem revisar o trabalho um do outro antes de entregar</li>
+          <li><strong>Atribuição dinâmica:</strong> Membros podem reatribuir tarefas conforme blockers aparecem</li>
+        </ul>
+      </div>
+
+      <!-- Dica Prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> Dica Prática
+        </h3>
+        <p class="text-neutral-300">Reserve equipes de agentes para projetos onde a coesão importa mais que a velocidade. Para tarefas independentes que você pode mesclar depois, subagentes com worktrees são mais eficientes. Use a pergunta: "esses agentes precisam se falar para produzir um resultado bom?" Se sim, use equipes. Se não, use subagentes.</p>
+      </div>
+    </section>
+
+    <!-- RESUMO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-purple-900/40 via-dark-800 to-dark-800 rounded-xl border border-purple-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center">
+          <span class="mr-3">✅</span> Resumo do Módulo 3.1
+        </h2>
+
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3">
+            <span class="text-purple-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Hack 23 — Git Worktrees</strong>
+              <span class="text-neutral-400"> - Crie cópias isoladas do projeto para rodar múltiplos agentes em paralelo sem conflitos</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-purple-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Hack 31 — Equipes de Agentes</strong>
+              <span class="text-neutral-400"> - Use quando agentes precisam se coordenar; mais caro mas produz saída muito mais coesa</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-purple-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Regra de ouro</strong>
+              <span class="text-neutral-400"> - Worktrees para independência total, equipes para coordenação e coesão</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-purple-400 mb-2">Próximo Módulo:</h3>
+          <p class="text-neutral-300">3.2 — 🏗️ Automação e Infraestrutura: /loop, VPS e controle remoto pelo celular</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="../trilha2/modulo-2-4.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">
+            ← Módulo Anterior
+          </a>
+          <a href="modulo-3-2.html" class="flex-1 text-center px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition-colors">
+            Próximo Módulo →
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-dark-600 py-8 mt-4">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>32 Hacks do Claude Code · <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> · 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) {
+      themeToggleDarkIcon.classList.remove('hidden');
+      html.classList.remove('dark');
+    } else {
+      themeToggleLightIcon.classList.remove('hidden');
+    }
+    themeToggle.addEventListener('click', () => {
+      themeToggleDarkIcon.classList.toggle('hidden');
+      themeToggleLightIcon.classList.toggle('hidden');
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>

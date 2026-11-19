@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 3.4 — Dados e Integrações | 32 Hacks do Claude Code</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FACC15',
+            dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    html:not(.dark) .text-purple-400 { color: #7c3aed; }
+    html:not(.dark) .bg-purple-500\/20 { background-color: rgba(124, 58, 237, 0.12); }
+    html:not(.dark) .bg-purple-500\/10 { background-color: rgba(124, 58, 237, 0.08); }
+    html:not(.dark) .border-purple-500\/30 { border-color: rgba(124, 58, 237, 0.25); }
+    html:not(.dark) .hover\:bg-purple-500\/30:hover { background-color: rgba(124, 58, 237, 0.18); }
+
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAVIGATION -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">⚡</span>
+            <span class="font-bold text-lg hidden sm:inline">32 Hacks do Claude Code</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+            <span class="sm:hidden">T1</span><span class="hidden sm:inline">Iniciante</span>
+          </a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+            <span class="sm:hidden">T2</span><span class="hidden sm:inline">Intermediário</span>
+          </a>
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-purple-400 bg-purple-500/10">
+            <span class="sm:hidden">T3</span><span class="hidden sm:inline">Avançado</span>
+          </a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-purple-400">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-purple-400">Trilha 3 - Avançado</a>
+      <span>/</span>
+      <span class="text-purple-400">Módulo 3.4</span>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-purple-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-semibold rounded-full mb-4">
+        MÓDULO 3.4 — ÚLTIMO MÓDULO
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">📊 Dados e Integrações</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">
+        Os três hacks finais do curso: economize contexto com APIs diretas, consulte bancos de dados em linguagem natural via CLI, e resolva o problema do corte de treinamento com documentação sempre atualizada pelo Context7 MCP.
+      </p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-purple-400">3</div>
+          <div class="text-xs text-neutral-400">Hacks</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-purple-400">60</div>
+          <div class="text-xs text-neutral-400">Minutos</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-purple-400">Pro</div>
+          <div class="text-xs text-neutral-400">Nível</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-purple-400">Dados</div>
+          <div class="text-xs text-neutral-400">Tipo</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTEUDO -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- HACK 24 -->
+    <section id="hack-24" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">24</span>
+        <h2 class="text-2xl font-bold">⚡ API Direta vs MCP — Economize Contexto</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Servidores MCP são poderosos e convenientes — eles expõem todas as ferramentas de uma plataforma de uma vez. Mas têm um custo: <strong class="text-purple-400">todas as definições de ferramentas são carregadas no contexto</strong>, mesmo as que você não vai usar. Quando o contexto está apertado, essa conveniência pode ser cara demais.
+      </p>
+
+      <!-- Conceito Principal -->
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-4 flex items-center">
+          <span class="mr-2">⚡</span> MCP Completo vs Endpoint Direto
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div class="bg-dark-700/50 rounded-lg p-4">
+            <p class="text-neutral-400 font-semibold text-sm mb-2">MCP do Notion (exemplo)</p>
+            <ul class="space-y-1 text-neutral-300 text-sm">
+              <li class="flex items-start space-x-2"><span class="text-neutral-500">→</span><span>Carrega 30+ definições de ferramentas</span></li>
+              <li class="flex items-start space-x-2"><span class="text-neutral-500">→</span><span>read_page, update_page, create_page...</span></li>
+              <li class="flex items-start space-x-2"><span class="text-neutral-500">→</span><span>search_database, create_database...</span></li>
+              <li class="flex items-start space-x-2"><span class="text-neutral-500">→</span><span>Centenas de tokens de overhead</span></li>
+            </ul>
+          </div>
+          <div class="bg-purple-900/20 rounded-lg p-4 border border-purple-500/20">
+            <p class="text-purple-400 font-semibold text-sm mb-2">Endpoint Direto</p>
+            <ul class="space-y-1 text-neutral-300 text-sm">
+              <li class="flex items-start space-x-2"><span class="text-purple-400">→</span><span>Apenas o código para aquela operação</span></li>
+              <li class="flex items-start space-x-2"><span class="text-purple-400">→</span><span>GET /v1/databases/{id}/query</span></li>
+              <li class="flex items-start space-x-2"><span class="text-purple-400">→</span><span>Sem ferramentas que você não usa</span></li>
+              <li class="flex items-start space-x-2"><span class="text-purple-400">→</span><span>Mínimo overhead de contexto</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Terminal Example -->
+      <div class="bg-dark-900 rounded-xl border border-dark-600 p-6 mb-6 font-mono text-sm">
+        <div class="flex items-center space-x-2 mb-4">
+          <div class="w-3 h-3 rounded-full bg-red-500"></div>
+          <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+          <div class="w-3 h-3 rounded-full bg-green-500"></div>
+          <span class="text-neutral-500 ml-2 font-sans text-xs">Exemplo — Leitura direta do Notion sem MCP</span>
+        </div>
+        <div class="space-y-2 text-neutral-300">
+          <p><span class="text-purple-400"># Ao invés de: instalar e configurar o MCP completo do Notion</span></p>
+          <p><span class="text-purple-400"># Use diretamente o endpoint que você precisa:</span></p>
+          <p class="mt-3"><span class="text-green-400">Você:</span> Leia o conteúdo da database do Notion com ID abc123.</p>
+          <p><span class="text-green-400">        </span> Use a API direta do Notion (token está em NOTION_TOKEN).</span></p>
+          <p class="mt-2"><span class="text-purple-400">Claude:</span> <span class="text-neutral-500">// Usando fetch direto ao endpoint</span></p>
+          <p><span class="text-neutral-500">        const response = await fetch(</span></p>
+          <p><span class="text-neutral-500">          'https://api.notion.com/v1/databases/abc123/query',</span></p>
+          <p><span class="text-neutral-500">          {</span></p>
+          <p><span class="text-neutral-500">            method: 'POST',</span></p>
+          <p><span class="text-neutral-500">            headers: {</span></p>
+          <p><span class="text-neutral-500">              'Authorization': `Bearer ${process.env.NOTION_TOKEN}`,</span></p>
+          <p><span class="text-neutral-500">              'Notion-Version': '2022-06-28'</span></p>
+          <p><span class="text-neutral-500">            }</span></p>
+          <p><span class="text-neutral-500">          }</span></p>
+          <p><span class="text-neutral-500">        );</span></p>
+        </div>
+      </div>
+
+      <!-- Dica Prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> Dica Prática — Quando Usar Cada Abordagem
+        </h3>
+        <p class="text-neutral-300 mb-3"><strong>Use MCP quando:</strong> você precisa de múltiplas ferramentas da plataforma em uma sessão, o contexto não está apertado, ou a conveniência vale mais que a economia de tokens.</p>
+        <p class="text-neutral-300"><strong>Use API direta quando:</strong> você usa apenas 1-2 operações da plataforma, o contexto está no limite, ou você vai chamar o mesmo endpoint repetidamente e quer scripts reutilizáveis.</p>
+      </div>
+    </section>
+
+    <!-- HACK 28 -->
+    <section id="hack-28" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">28</span>
+        <h2 class="text-2xl font-bold">📊 Análise de Dados sem SQL</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Escrever consultas SQL para análises exploratórias é lento — você precisa saber a estrutura das tabelas, a sintaxe exata, e ainda iterar até chegar na query certa. Com o Claude Code e uma <strong class="text-purple-400">CLI de banco de dados conectada</strong>, você pergunta em linguagem natural e recebe a resposta diretamente.
+      </p>
+
+      <!-- Conceito Principal -->
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-4 flex items-center">
+          <span class="mr-2">📊</span> O Padrão CLI + Claude
+        </h3>
+        <p class="text-neutral-300 mb-4">O Claude recebe a pergunta em linguagem natural, traduz para a consulta correta na sintaxe da ferramenta, executa via CLI e retorna o resultado interpretado. Funciona para qualquer ferramenta com interface CLI.</p>
+        <div class="flex items-center space-x-2 flex-wrap gap-2">
+          <span class="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-sm">BigQuery CLI</span>
+          <span class="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-sm">psql</span>
+          <span class="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-sm">mysql CLI</span>
+          <span class="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-sm">duckdb</span>
+          <span class="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-sm">sqlite3</span>
+          <span class="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-sm">mongosh</span>
+        </div>
+      </div>
+
+      <!-- Terminal Example -->
+      <div class="bg-dark-900 rounded-xl border border-dark-600 p-6 mb-6 font-mono text-sm">
+        <div class="flex items-center space-x-2 mb-4">
+          <div class="w-3 h-3 rounded-full bg-red-500"></div>
+          <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+          <div class="w-3 h-3 rounded-full bg-green-500"></div>
+          <span class="text-neutral-500 ml-2 font-sans text-xs">Análise com BigQuery CLI — Linguagem natural para SQL</span>
+        </div>
+        <div class="space-y-2 text-neutral-300">
+          <p><span class="text-green-400">Você:</span> Quais foram nossas 10 maiores fontes de receita no último</p>
+          <p><span class="text-green-400">        </span> trimestre? Use o BigQuery (projeto: minha-empresa).</p>
+          <p class="mt-2 text-neutral-500"><span class="text-purple-400">Claude:</span> Vou consultar o BigQuery...</p>
+          <p class="text-neutral-500">  <span class="text-neutral-400">$</span> bq query --use_legacy_sql=false \</p>
+          <p class="text-neutral-500">    'SELECT</p>
+          <p class="text-neutral-500">       revenue_source,</p>
+          <p class="text-neutral-500">       SUM(amount) as total_revenue</p>
+          <p class="text-neutral-500">     FROM `minha-empresa.analytics.transactions`</p>
+          <p class="text-neutral-500">     WHERE DATE(created_at) BETWEEN</p>
+          <p class="text-neutral-500">       DATE_SUB(CURRENT_DATE(), INTERVAL 1 QUARTER)</p>
+          <p class="text-neutral-500">       AND CURRENT_DATE()</p>
+          <p class="text-neutral-500">     GROUP BY revenue_source</p>
+          <p class="text-neutral-500">     ORDER BY total_revenue DESC</p>
+          <p class="text-neutral-500">     LIMIT 10'</p>
+          <p class="mt-2"><span class="text-purple-400">Resultado:</span></p>
+          <p><span class="text-neutral-500">  1. Assinaturas Pro     R$ 842.300</span></p>
+          <p><span class="text-neutral-500">  2. Enterprise Anual   R$ 620.000</span></p>
+          <p><span class="text-neutral-500">  3. Add-ons            R$ 183.400</span></p>
+          <p><span class="text-neutral-500">  ...</span></p>
+        </div>
+      </div>
+
+      <!-- Dados/Pesquisa -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center">
+          <span class="mr-2">💡</span> Padrão Reutilizável
+        </h3>
+        <p class="text-neutral-300 mb-3">Este padrão funciona para qualquer análise repetível. Documente no CLAUDE.md as tabelas principais, schemas e exemplos de consultas anteriores. Isso torna as análises subsequentes ainda mais precisas — o Claude já conhece a estrutura dos dados.</p>
+        <ul class="space-y-2 text-neutral-300 text-sm">
+          <li class="flex items-start space-x-2"><span class="text-blue-400">→</span><span>Perguntas de negócio → SQL automático → resultado direto</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">→</span><span>Funciona com qualquer banco que tenha CLI</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">→</span><span>Claude aprende o schema com o tempo via CLAUDE.md</span></li>
+        </ul>
+      </div>
+
+      <!-- Dica Prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> Dica Prática
+        </h3>
+        <p class="text-neutral-300">Adicione ao CLAUDE.md as tabelas principais do seu banco com descrições breves: "tabela `transactions`: registros de pagamento com campos amount, status, created_at, revenue_source". Com esse contexto persistente, o Claude gera queries muito mais precisas desde o primeiro prompt.</p>
+      </div>
+    </section>
+
+    <!-- HACK 32 -->
+    <section id="hack-32" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xl flex-shrink-0">32</span>
+        <h2 class="text-2xl font-bold">📚 Context7 MCP — Documentação Sempre Atual</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        O Claude foi treinado com dados até uma certa data. Next.js 15 lançou depois. React 19 lançou depois. O Tailwind CSS v4 lançou depois. Quando o Claude escreve código com essas versões, pode usar APIs deprecadas ou padrões antigos. <strong class="text-purple-400">Context7 MCP</strong> resolve isso injetando documentação atual específica por versão antes de qualquer código ser escrito.
+      </p>
+
+      <!-- Conceito Principal -->
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-4 flex items-center">
+          <span class="mr-2">📚</span> Como o Context7 Funciona
+        </h3>
+        <p class="text-neutral-300 mb-4">Quando você pede ao Claude para usar Context7, ele consulta o servidor MCP antes de escrever código. O Context7 busca a documentação correta para a versão especificada e injeta no contexto. O resultado é código compatível com o que você está usando — não com o que existia durante o treinamento.</p>
+        <div class="space-y-3">
+          <div class="flex items-start space-x-3">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-xs font-bold flex-shrink-0">1</span>
+            <div>
+              <p class="text-white font-medium">Você pede código com uma biblioteca específica</p>
+              <p class="text-neutral-400 text-sm">"Crie um Server Component no Next.js 15 com App Router"</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-xs font-bold flex-shrink-0">2</span>
+            <div>
+              <p class="text-white font-medium">Context7 busca a documentação atual</p>
+              <p class="text-neutral-400 text-sm">Documentação do Next.js 15 + exemplos de código ao vivo</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-xs font-bold flex-shrink-0">3</span>
+            <div>
+              <p class="text-white font-medium">Claude escreve com contexto atualizado</p>
+              <p class="text-neutral-400 text-sm">Código correto para a versão que você está usando</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Terminal Example -->
+      <div class="bg-dark-900 rounded-xl border border-dark-600 p-6 mb-6 font-mono text-sm">
+        <div class="flex items-center space-x-2 mb-4">
+          <div class="w-3 h-3 rounded-full bg-red-500"></div>
+          <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+          <div class="w-3 h-3 rounded-full bg-green-500"></div>
+          <span class="text-neutral-500 ml-2 font-sans text-xs">Setup e uso do Context7 MCP</span>
+        </div>
+        <div class="space-y-2 text-neutral-300">
+          <p><span class="text-purple-400"># 1. Instalar o Context7 MCP</span></p>
+          <p><span class="text-green-400">$</span> npx -y @upstash/context7-mcp</p>
+          <p class="mt-3"><span class="text-purple-400"># 2. Adicionar ao .claude/settings.json</span></p>
+          <p><span class="text-neutral-500">{</span></p>
+          <p><span class="text-neutral-500">  "mcpServers": {</span></p>
+          <p><span class="text-neutral-500">    "context7": {</span></p>
+          <p><span class="text-neutral-500">      "command": "npx",</span></p>
+          <p><span class="text-neutral-500">      "args": ["-y", "@upstash/context7-mcp"]</span></p>
+          <p><span class="text-neutral-500">    }</span></p>
+          <p><span class="text-neutral-500">  }</span></p>
+          <p><span class="text-neutral-500">}</span></p>
+          <p class="mt-3"><span class="text-purple-400"># 3. Usar no prompt</span></p>
+          <p><span class="text-green-400">Você:</span> Use Context7 para buscar a documentação do Next.js 15</p>
+          <p><span class="text-green-400">        </span> e depois crie um Server Action para salvar um formulário.</p>
+          <p class="mt-2"><span class="text-purple-400">Claude:</span> Consultando Context7 para Next.js 15...</p>
+          <p><span class="text-neutral-500">        Documentação carregada. Usando 'use server' directive,</span></p>
+          <p><span class="text-neutral-500">        revalidatePath e FormData conforme docs v15.</span></p>
+        </div>
+      </div>
+
+      <!-- Bibliotecas Suportadas -->
+      <div class="bg-gradient-to-br from-purple-900/30 to-dark-800 rounded-xl border border-purple-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-purple-400 mb-4">Bibliotecas com Suporte</h3>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+          <span class="px-2 py-1 bg-dark-700/50 rounded text-neutral-300 text-sm text-center">Next.js</span>
+          <span class="px-2 py-1 bg-dark-700/50 rounded text-neutral-300 text-sm text-center">React</span>
+          <span class="px-2 py-1 bg-dark-700/50 rounded text-neutral-300 text-sm text-center">MongoDB</span>
+          <span class="px-2 py-1 bg-dark-700/50 rounded text-neutral-300 text-sm text-center">Tailwind CSS</span>
+          <span class="px-2 py-1 bg-dark-700/50 rounded text-neutral-300 text-sm text-center">Prisma</span>
+          <span class="px-2 py-1 bg-dark-700/50 rounded text-neutral-300 text-sm text-center">Supabase</span>
+          <span class="px-2 py-1 bg-dark-700/50 rounded text-neutral-300 text-sm text-center">Drizzle</span>
+          <span class="px-2 py-1 bg-dark-700/50 rounded text-neutral-300 text-sm text-center">shadcn/ui</span>
+          <span class="px-2 py-1 bg-dark-700/50 rounded text-neutral-300 text-sm text-center">Vercel SDK</span>
+          <span class="px-2 py-1 bg-dark-700/50 rounded text-neutral-300 text-sm text-center">tRPC</span>
+          <span class="px-2 py-1 bg-dark-700/50 rounded text-neutral-300 text-sm text-center">Zod</span>
+          <span class="px-2 py-1 bg-purple-500/20 text-purple-400 rounded text-sm text-center">+1000 mais</span>
+        </div>
+      </div>
+
+      <!-- Dica Prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center">
+          <span class="mr-2">💡</span> Dica Prática
+        </h3>
+        <p class="text-neutral-300">Adicione ao CLAUDE.md do projeto as versões exatas das principais dependências: "Este projeto usa Next.js 15.1, React 19, Tailwind v4". Quando você pede ao Claude para usar Context7, ele já sabe qual versão buscar sem precisar perguntar.</p>
+      </div>
+    </section>
+
+    <!-- PARABENS -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-purple-900/40 via-dark-800 to-dark-800 rounded-xl border border-purple-500/30 p-8 text-center">
+        <div class="text-6xl mb-6">🎉</div>
+        <h2 class="text-3xl font-bold mb-4 text-white">Parabéns! Você completou os 32 Hacks do Claude Code!</h2>
+        <p class="text-neutral-400 text-lg max-w-2xl mx-auto mb-8">
+          Você dominou todas as três trilhas — de configuração básica até paralelismo avançado, automação e integrações. Você agora tem um arsenal completo para trabalhar com o Claude Code como profissional.
+        </p>
+
+        <!-- Resumo final do módulo -->
+        <div class="bg-dark-800/50 rounded-xl p-6 text-left mb-8">
+          <h3 class="text-lg font-semibold text-purple-400 mb-4">O que você aprendeu neste módulo:</h3>
+          <div class="space-y-3">
+            <div class="flex items-start space-x-3">
+              <span class="text-purple-400 mt-1">✓</span>
+              <div>
+                <strong class="text-white">Hack 24 — API Direta vs MCP</strong>
+                <span class="text-neutral-400"> - Use endpoints diretos quando só precisa de uma operação; economiza contexto significativamente</span>
+              </div>
+            </div>
+            <div class="flex items-start space-x-3">
+              <span class="text-purple-400 mt-1">✓</span>
+              <div>
+                <strong class="text-white">Hack 28 — Análise sem SQL</strong>
+                <span class="text-neutral-400"> - Conecte CLIs de banco de dados e faça perguntas em linguagem natural</span>
+              </div>
+            </div>
+            <div class="flex items-start space-x-3">
+              <span class="text-purple-400 mt-1">✓</span>
+              <div>
+                <strong class="text-white">Hack 32 — Context7 MCP</strong>
+                <span class="text-neutral-400"> - Resolva o problema do corte de treinamento com documentação sempre atualizada</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resumo das 3 trilhas -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+          <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-4">
+            <div class="text-2xl mb-2">🌱</div>
+            <h4 class="font-bold text-emerald-400 mb-1">Trilha 1 — Iniciante</h4>
+            <p class="text-neutral-400 text-sm">Configuração, contexto e fluxo de trabalho inteligente</p>
+            <p class="text-emerald-400 text-xs mt-2 font-semibold">Hacks 1–10 ✓</p>
+          </div>
+          <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-4">
+            <div class="text-2xl mb-2">🚀</div>
+            <h4 class="font-bold text-blue-400 mb-1">Trilha 2 — Intermediário</h4>
+            <p class="text-neutral-400 text-sm">Automação, MCP, subagentes e prompt engineering</p>
+            <p class="text-blue-400 text-xs mt-2 font-semibold">Hacks 11–22 ✓</p>
+          </div>
+          <div class="bg-purple-900/20 rounded-xl border border-purple-500/30 p-4">
+            <div class="text-2xl mb-2">🔥</div>
+            <h4 class="font-bold text-purple-400 mb-1">Trilha 3 — Avançado</h4>
+            <p class="text-neutral-400 text-sm">Paralelismo, infraestrutura, poder máximo e dados</p>
+            <p class="text-purple-400 text-xs mt-2 font-semibold">Hacks 23–32 ✓</p>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="modulo-3-3.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">
+            ← Módulo Anterior
+          </a>
+          <a href="../../index.html" class="flex-1 text-center px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-500 transition-colors">
+            🏠 Voltar ao Início
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-dark-600 py-8 mt-4">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>32 Hacks do Claude Code · <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> · 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) {
+      themeToggleDarkIcon.classList.remove('hidden');
+      html.classList.remove('dark');
+    } else {
+      themeToggleLightIcon.classList.remove('hidden');
+    }
+    themeToggle.addEventListener('click', () => {
+      themeToggleDarkIcon.classList.toggle('hidden');
+      themeToggleLightIcon.classList.toggle('hidden');
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>

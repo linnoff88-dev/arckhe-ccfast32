@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo 1.2 — Gerenciar Contexto | 32 Hacks do Claude Code</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FACC15',
+            dark: { 900: '#111827', 800: '#1f2937', 700: '#374151', 600: '#4b5563' }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dark body { background-color: #111827; }
+    .topic-explanation { display: none; }
+    .topic-explanation.active { display: block; }
+
+    /* Light mode overrides - OBRIGATORIO */
+    html:not(.dark) body { background-color: #f8fafc; }
+    html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+    html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+    html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+    html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+    html:not(.dark) .text-neutral-100 { color: #111827; }
+    html:not(.dark) .text-neutral-300 { color: #4b5563; }
+    html:not(.dark) .text-neutral-400 { color: #6b7280; }
+    html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+    html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+    html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+    /* Light mode - cores de acento (trilha emerald) */
+    html:not(.dark) .text-emerald-400 { color: #059669; }
+    html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+    html:not(.dark) .bg-emerald-500\/10 { background-color: rgba(5, 150, 105, 0.08); }
+    html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+    html:not(.dark) .hover\:bg-emerald-500\/30:hover { background-color: rgba(5, 150, 105, 0.18); }
+
+    /* Light mode - remove gradientes (fundo uniforme) */
+    html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+
+    /* Light mode - cores especiais */
+    html:not(.dark) .text-primary { color: #a16207; }
+    html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+    html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+    html:not(.dark) .text-sky-400 { color: #0369a1; }
+    html:not(.dark) .text-yellow-400 { color: #a16207; }
+    html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+    html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+
+    /* Light mode - nav */
+    html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+  </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+  <!-- NAVIGATION -->
+  <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-14">
+        <div class="flex items-center space-x-4">
+          <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+            <span class="text-2xl">⚡</span>
+            <span class="font-bold text-lg hidden sm:inline">32 Hacks do Claude Code</span>
+          </a>
+          <span class="text-neutral-600">|</span>
+          <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+        </div>
+        <div class="flex items-center space-x-1 sm:space-x-2">
+          <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-emerald-400 bg-emerald-500/10">
+            <span class="sm:hidden">T1</span><span class="hidden sm:inline">Iniciante</span>
+          </a>
+          <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+            <span class="sm:hidden">T2</span><span class="hidden sm:inline">Intermediário</span>
+          </a>
+          <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-purple-400 hover:bg-purple-500/10 transition-colors">
+            <span class="sm:hidden">T3</span><span class="hidden sm:inline">Avançado</span>
+          </a>
+          <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex items-center space-x-2 text-sm text-neutral-400">
+      <a href="../../index.html" class="hover:text-emerald-400 transition-colors">Início</a>
+      <span>/</span>
+      <a href="index.html" class="hover:text-emerald-400 transition-colors">Trilha 1</a>
+      <span>/</span>
+      <span class="text-emerald-400">Módulo 1.2</span>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="bg-gradient-to-br from-emerald-900/30 via-dark-800 to-dark-800 py-12 border-b border-dark-600">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded-full mb-4">
+        MÓDULO 1.2
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-bold mb-4">🧠 Gerenciar Contexto</h1>
+      <p class="text-lg text-neutral-400 max-w-3xl">O contexto é o recurso mais escasso e mais crítico no Claude Code. Três hacks para mantê-lo enxuto, diagnosticar problemas de consumo e saber exatamente quando compactar ou reiniciar.</p>
+      <div class="grid grid-cols-4 gap-4 mt-8 max-w-2xl">
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">3</div>
+          <div class="text-xs text-neutral-400">Hacks</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">50</div>
+          <div class="text-xs text-neutral-400">Minutos</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">Base</div>
+          <div class="text-xs text-neutral-400">Nível</div>
+        </div>
+        <div class="bg-dark-800/50 rounded-lg p-3 border border-dark-600">
+          <div class="text-xl font-bold text-emerald-400">Core</div>
+          <div class="text-xs text-neutral-400">Tipo</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTEUDO -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- HACK 4: Contexto Pequeno -->
+    <section id="topico-1" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">4</span>
+        <h2 class="text-2xl font-bold">🎯 Hack 4 — Contexto Pequeno</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        O erro mais comum ao usar o Claude Code é despejar toda a base de código no contexto. Mais arquivos não significa mais inteligência — significa mais ruído. O princípio do <strong class="text-emerald-400">contexto pequeno</strong> é simples: dê ao Claude apenas o que ele precisa para a tarefa atual, nada além disso.
+      </p>
+
+      <!-- Conceito principal -->
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-4 flex items-center"><span class="mr-2">💡</span> A lógica do contexto cirúrgico</h3>
+        <p class="text-neutral-300 mb-4">O Claude Code tem um limite de contexto. Quando está cheio com informação desnecessária, o modelo perde capacidade de raciocínio sobre o que importa. A estratégia certa:</p>
+        <ul class="space-y-2 text-neutral-300">
+          <li class="flex items-start space-x-2"><span class="text-emerald-400 mt-1">•</span><span><strong class="text-white">Divida tarefas grandes</strong> em etapas focadas. Cada etapa tem seu próprio contexto mínimo.</span></li>
+          <li class="flex items-start space-x-2"><span class="text-emerald-400 mt-1">•</span><span><strong class="text-white">Carregue apenas arquivos relevantes</strong> para a tarefa atual — não o diretório inteiro.</span></li>
+          <li class="flex items-start space-x-2"><span class="text-emerald-400 mt-1">•</span><span><strong class="text-white">Cole trechos, não arquivos completos</strong> quando apenas uma função ou bloco importa.</span></li>
+          <li class="flex items-start space-x-2"><span class="text-emerald-400 mt-1">•</span><span><strong class="text-white">Use o CLAUDE.md</strong> como contexto base — ele já contém a visão geral do projeto.</span></li>
+        </ul>
+      </div>
+
+      <!-- Dados/Pesquisa -->
+      <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">📊</span> Impacto do contexto excessivo</h3>
+        <ul class="space-y-3 text-neutral-300">
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Com contexto enxuto: o Claude foca nos detalhes relevantes e produz soluções precisas</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Com contexto cheio: o modelo começa a "perder o fio", mistura padrões de arquivos diferentes e sugere soluções genéricas</span></li>
+          <li class="flex items-start space-x-2"><span class="text-blue-400">•</span><span>Contexto irrelevante é tão prejudicial quanto falta de contexto — cria interferência no raciocínio</span></li>
+        </ul>
+      </div>
+
+      <!-- Exemplo prático -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4 flex items-center"><span class="mr-2">💻</span> Antes e Depois</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p class="text-red-400 text-sm font-semibold mb-2">✗ Abordagem ruim</p>
+            <div class="bg-dark-900 rounded-lg p-3 font-mono text-sm text-neutral-400">
+              <p>"Aqui está todo o meu projeto</p>
+              <p>[cola 15 arquivos inteiros]</p>
+              <p>Adicione autenticação."</p>
+            </div>
+          </div>
+          <div>
+            <p class="text-emerald-400 text-sm font-semibold mb-2">✓ Abordagem correta</p>
+            <div class="bg-dark-900 rounded-lg p-3 font-mono text-sm text-neutral-400">
+              <p>"Veja o arquivo routes.ts</p>
+              <p>e middleware.ts. Adicione</p>
+              <p>JWT auth nas rotas /api."</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dica prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">⚡</span> Dica Prática</h3>
+        <p class="text-neutral-300">Antes de começar qualquer tarefa, pergunte: "Quais são os 2-3 arquivos que o Claude realmente precisa para resolver isso?" Se você não consegue responder, provavelmente precisa decompor a tarefa em etapas menores primeiro.</p>
+      </div>
+
+      <!-- Fazer vs Não fazer -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ O que FAZER</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Selecione apenas os arquivos diretamente relacionados à tarefa</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Divida funcionalidades grandes em microtarefas sequenciais</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Referencie arquivos pelo nome em vez de colar o conteúdo</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Aproveite o CLAUDE.md para contexto permanente do projeto</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ O que NÃO fazer</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Despejar o projeto inteiro esperando que o Claude "entenda tudo"</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Incluir arquivos de configuração que não afetam a tarefa atual</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Colar histórico de outras sessões para "dar contexto adicional"</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Misturar múltiplos problemas não relacionados em uma só mensagem</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- HACK 5: /context -->
+    <section id="topico-2" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">5</span>
+        <h2 class="text-2xl font-bold">🔍 Hack 5 — /context</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Quando uma sessão parece mais lenta ou o Claude começa a dar respostas imprecisas, o instinto é reiniciar tudo. Mas com o <strong class="text-emerald-400">/context</strong>, você primeiro diagnostica: veja exatamente o que está consumindo seus tokens, identifique o culpado e tome ação cirúrgica — sem perder o trabalho feito.
+      </p>
+
+      <!-- Conceito principal -->
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-4 flex items-center"><span class="mr-2">💡</span> O relatório do /context</h3>
+        <p class="text-neutral-300 mb-4">O comando <code class="bg-dark-900 px-2 py-0.5 rounded text-emerald-400 text-sm">/context</code> gera um relatório detalhado mostrando:</p>
+        <ul class="space-y-2 text-neutral-300">
+          <li class="flex items-start space-x-2"><span class="text-emerald-400 mt-1">•</span><span><strong class="text-white">Prompt de sistema:</strong> quantos tokens o sistema reserva para instruções base</span></li>
+          <li class="flex items-start space-x-2"><span class="text-emerald-400 mt-1">•</span><span><strong class="text-white">Arquivos carregados:</strong> lista com tamanho em tokens de cada arquivo no contexto</span></li>
+          <li class="flex items-start space-x-2"><span class="text-emerald-400 mt-1">•</span><span><strong class="text-white">Servidores MCP:</strong> quanto cada servidor MCP ativo está consumindo</span></li>
+          <li class="flex items-start space-x-2"><span class="text-emerald-400 mt-1">•</span><span><strong class="text-white">Histórico da conversa:</strong> porcentagem ocupada pelas mensagens anteriores</span></li>
+          <li class="flex items-start space-x-2"><span class="text-emerald-400 mt-1">•</span><span><strong class="text-white">Total e disponível:</strong> visão consolidada do contexto usado vs disponível</span></li>
+        </ul>
+      </div>
+
+      <!-- Exemplo de terminal -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4 flex items-center"><span class="mr-2">💻</span> Saída típica do /context</h3>
+        <div class="bg-dark-900 rounded-lg p-4 font-mono text-sm">
+          <p class="text-emerald-400">$ /context</p>
+          <p class="text-neutral-500 mt-2">─── Distribuição do Contexto ───────────</p>
+          <p class="text-neutral-300 mt-1">Prompt de sistema     <span class="text-yellow-400">12%</span>  (24.5k tokens)</p>
+          <p class="text-neutral-300">Arquivos carregados   <span class="text-red-400">38%</span>  (77.8k tokens)</p>
+          <p class="text-neutral-300">  ├ database/schema.prisma  <span class="text-red-400">18%</span></p>
+          <p class="text-neutral-300">  ├ app/api/routes.ts        <span class="text-yellow-400">12%</span></p>
+          <p class="text-neutral-300">  └ lib/auth.ts               <span class="text-emerald-400">8%</span></p>
+          <p class="text-neutral-300">Servidores MCP        <span class="text-yellow-400">8%</span>   (16.4k tokens)</p>
+          <p class="text-neutral-300">Histórico             <span class="text-emerald-400">15%</span>  (30.7k tokens)</p>
+          <p class="text-neutral-500 mt-2">─── Total: 73% utilizado ───────────────</p>
+          <p class="text-red-400">⚠ Contexto acima de 70% — considere /compact</p>
+        </div>
+      </div>
+
+      <!-- Dica prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">⚡</span> Dica Prática</h3>
+        <p class="text-neutral-300">Execute /context antes de compactar para saber o que realmente está pesando. Se um arquivo específico está consumindo 20%+ do contexto e não é mais necessário para a tarefa atual, remova-o da sessão antes de compactar — isso pode economizar mais contexto do que a compactação em si.</p>
+      </div>
+
+      <!-- Fazer vs Não fazer -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ O que FAZER</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Execute /context quando a sessão parecer mais lenta ou imprecisa</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Use o relatório para identificar arquivos que podem ser removidos</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Verifique quais servidores MCP estão ativos e se todos são necessários</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ O que NÃO fazer</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Reiniciar tudo sem primeiro diagnosticar onde está o problema</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Ignorar o relatório e compactar sem entender o que está pesando</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Deixar servidores MCP ativos que não são usados na tarefa atual</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- HACK 6: /compact e /clear -->
+    <section id="topico-3" class="mb-16">
+      <div class="flex items-center space-x-4 mb-6">
+        <span class="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xl">6</span>
+        <h2 class="text-2xl font-bold">🗜️ Hack 6 — /compact e /clear</h2>
+      </div>
+
+      <p class="text-neutral-300 mb-6 leading-relaxed">
+        Dois comandos para situações diferentes: <strong class="text-emerald-400">/compact</strong> quando você quer continuar na mesma tarefa mas recuperar performance, e <strong class="text-emerald-400">/clear</strong> quando a tarefa encerrou e uma nova começa. Saber quando usar cada um evita perda de decisões importantes e garante sessões sempre eficientes.
+      </p>
+
+      <!-- Conceito principal -->
+      <div class="bg-gradient-to-br from-emerald-900/30 to-dark-800 rounded-xl border border-emerald-500/30 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-emerald-400 mb-4 flex items-center"><span class="mr-2">💡</span> Diferença entre /compact e /clear</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-dark-900/50 rounded-lg p-4">
+            <h4 class="text-emerald-400 font-semibold mb-2">/compact</h4>
+            <ul class="space-y-1 text-neutral-300 text-sm">
+              <li>• Comprime o histórico da conversa</li>
+              <li>• Mantém decisões e resultados importantes</li>
+              <li>• Libera contexto sem perder continuidade</li>
+              <li>• Aceita instruções sobre o que preservar</li>
+              <li class="text-emerald-400 mt-2">Quando usar: contexto em ~60%+, mesma tarefa</li>
+            </ul>
+          </div>
+          <div class="bg-dark-900/50 rounded-lg p-4">
+            <h4 class="text-emerald-400 font-semibold mb-2">/clear</h4>
+            <ul class="space-y-1 text-neutral-300 text-sm">
+              <li>• Reinicia completamente o contexto da conversa</li>
+              <li>• CLAUDE.md e arquivos do projeto permanecem</li>
+              <li>• Contexto do zero — ideal para nova tarefa</li>
+              <li>• Mais rápido e eficiente que compact</li>
+              <li class="text-emerald-400 mt-2">Quando usar: tarefa encerrada, nova tarefa começa</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exemplo de terminal -->
+      <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4 flex items-center"><span class="mr-2">💻</span> Usando o /compact com instrução</h3>
+        <div class="bg-dark-900 rounded-lg p-4 font-mono text-sm">
+          <p class="text-neutral-500"># Contexto chegou a 62% — hora de compactar</p>
+          <p class="text-emerald-400 mt-2">$ /compact but keep all API integration decisions and the authentication flow we decided on</p>
+          <p class="text-neutral-400 mt-1">Compactando histórico...</p>
+          <p class="text-neutral-400">Preservando: decisões de API, fluxo de auth...</p>
+          <p class="text-emerald-400 mt-1">✓ Contexto reduzido de 62% para 18%</p>
+          <p class="text-neutral-500 mt-2"># Decisões importantes preservadas</p>
+          <p class="text-neutral-500"># Pronto para continuar com performance máxima</p>
+        </div>
+      </div>
+
+      <!-- Timeline: quando compactar vs limpar -->
+      <div class="space-y-4 mb-6">
+        <h3 class="text-lg font-semibold">Protocolo de gerenciamento de contexto</h3>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center">
+            <span class="text-emerald-400 font-bold text-sm">60%</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <h4 class="font-semibold text-emerald-400 mb-1">Execute /compact</h4>
+            <p class="text-neutral-300 text-sm">Comprima o histórico com instrução específica. Continue a tarefa com contexto recuperado e performance restaurada.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+            <span class="text-blue-400 font-bold text-sm">Nova</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <h4 class="font-semibold text-blue-400 mb-1">Execute /clear</h4>
+            <p class="text-neutral-300 text-sm">Ao terminar uma tarefa e começar outra. O CLAUDE.md garante que o Claude ainda conhece o projeto — contexto limpo para máximo desempenho na nova tarefa.</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0 w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center">
+            <span class="text-red-400 font-bold text-sm">85%</span>
+          </div>
+          <div class="flex-1 bg-dark-800 rounded-xl p-5 border border-dark-600">
+            <h4 class="font-semibold text-red-400 mb-1">Zona crítica — não chegue aqui</h4>
+            <p class="text-neutral-300 text-sm">Acima de 85%, a qualidade degrada severamente. Se acontecer: use /clear e recomece a tarefa com contexto limpo. Melhor perder o histórico do que continuar com desempenho ruim.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dica prática -->
+      <div class="bg-primary/10 rounded-xl border border-primary/40 p-6 mb-6">
+        <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">⚡</span> Dica Prática</h3>
+        <p class="text-neutral-300">Use o /compact com instruções específicas sobre o que preservar: decisões de arquitetura, escolhas de API, regras de negócio definidas na sessão. Exemplos: <code class="bg-dark-700 px-1 rounded text-sm">/compact but keep database schema decisions</code> ou <code class="bg-dark-700 px-1 rounded text-sm">/compact focus on authentication changes</code>.</p>
+      </div>
+
+      <!-- Fazer vs Não fazer -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+          <h4 class="font-bold text-emerald-400 mb-4">✓ O que FAZER</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Execute /compact em ~60% do contexto — não espere chegar a 80%+</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Passe instruções claras sobre o que preservar no /compact</span></li>
+            <li class="flex items-start space-x-2"><span class="text-emerald-400 flex-shrink-0">✓</span><span>Use /clear ao mudar de tarefa — CLAUDE.md sempre persiste</span></li>
+          </ul>
+        </div>
+        <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+          <h4 class="font-bold text-red-400 mb-4">✗ O que NÃO fazer</h4>
+          <ul class="space-y-3 text-neutral-300">
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Esperar o contexto estourar para agir — a degradação começa antes</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Usar /compact sem instruções — pode perder detalhes importantes</span></li>
+            <li class="flex items-start space-x-2"><span class="text-red-400 flex-shrink-0">✗</span><span>Usar /clear no meio de uma tarefa complexa sem salvar as decisões em algum lugar</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESUMO DO MODULO -->
+    <section class="mb-12">
+      <div class="bg-gradient-to-br from-emerald-900/40 via-dark-800 to-dark-800 rounded-xl border border-emerald-500/30 p-8">
+        <h2 class="text-2xl font-bold mb-6 flex items-center">
+          <span class="mr-3">🎯</span> Resumo do Módulo 1.2
+        </h2>
+
+        <div class="space-y-4 mb-8">
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Hack 4 — Contexto Pequeno:</strong>
+              <span class="text-neutral-400"> Dê ao Claude apenas o contexto da tarefa atual — menos ruído significa melhor desempenho e resultados mais precisos</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Hack 5 — /context:</strong>
+              <span class="text-neutral-400"> Diagnostique exatamente o que consome seus tokens antes de tomar qualquer ação corretiva na sessão</span>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3">
+            <span class="text-emerald-400 mt-1">✓</span>
+            <div>
+              <strong class="text-white">Hack 6 — /compact e /clear:</strong>
+              <span class="text-neutral-400"> Compacte em ~60% (mesma tarefa) ou limpe ao mudar de tarefa — o CLAUDE.md persiste em ambos os casos</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+          <h3 class="font-semibold text-emerald-400 mb-2">Próximo Módulo:</h3>
+          <p class="text-neutral-300">1.3 — Fluxo de Trabalho Inteligente: plan mode, interação colaborativa e autoverificação para eliminar retrabalho e garantir qualidade em cada etapa.</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="modulo-1-1.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">
+            ← Módulo Anterior: Configuração
+          </a>
+          <a href="modulo-1-3.html" class="flex-1 text-center px-6 py-3 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-500 transition-colors">
+            Próximo: Fluxo Inteligente →
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-dark-600 py-8 mt-4">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-neutral-500 text-sm">
+      <p>32 Hacks do Claude Code · <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a> · 2026</p>
+    </div>
+  </footer>
+
+  <script>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const html = document.documentElement;
+    if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) {
+      themeToggleDarkIcon.classList.remove('hidden');
+      html.classList.remove('dark');
+    } else {
+      themeToggleLightIcon.classList.remove('hidden');
+    }
+    themeToggle.addEventListener('click', () => {
+      themeToggleDarkIcon.classList.toggle('hidden');
+      themeToggleLightIcon.classList.toggle('hidden');
+      html.classList.toggle('dark');
+      localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+    });
+  </script>
+</body>
+</html>
